@@ -1,0 +1,166 @@
+/* Overlay for the popup */
+.inicio-sesion-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100000;
+}
+
+/* Container for the popup content */
+.inicio-sesion-popup-content {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Close button */
+.inicio-sesion-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Heading */
+.inicioHeader {
+  font-size: 24px;
+  color: white;
+  background-color: #3a6351;
+  padding: 20px;
+  margin: -30px -30px 20px -30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
+}
+
+/* Input fields */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+  max-width: 300px;
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Forgot password link */
+.inicio-sesion-forgot-password {
+ float: left;
+  font-size: 12px;
+  color: #3a6351;
+  text-align: left;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  max-width: 300px;
+  width: 100%;
+  text-decoration: none;
+  margin-top: 0.2rem;
+}
+
+.inicio-sesion-forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.inicio-sesion-btn {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inicio-sesion-btn .inicio-sesion-icon {
+  margin-right: 10px;
+}
+
+.inicio-sesion-btn-email {
+  background-color: #e0e0e0;
+}
+
+.inicio-sesion-btn-google {
+  background-color: #e0e0e0;
+}
+
+.inicio-sesion-btn-login {
+  background-color: #3a6351;
+  color: white;
+}
+
+.inicio-sesion-btn-guest {
+  background-color: #3a6351;
+  color: white;
+}
+
+/* Terms and register text */
+.inicio-sesion-terms, .inicio-sesion-register {
+  font-size: 14px;
+  color: #3a6351;
+  margin-top: 20px;
+}
+
+.inicio-sesion-terms a, .inicio-sesion-register a {
+  color: #3a6351;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.inicio-sesion-terms a:hover, .inicio-sesion-register a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.inicio-sesion-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 20px 0;
+}
+/* Modificación para centrar el registro verticalmente */
+.inicio-sesion-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; 
+  height: 100%; 
+}
+
+.inicio-sesion-register {
+  margin-top: auto; 
+  margin-bottom: 0; 
+}

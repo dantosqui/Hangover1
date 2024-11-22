@@ -1,0 +1,15 @@
+.wrapbusqueda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Alinea las cartas a la izquierda */
+  gap: 20px; /* Espacio entre las cartas */
+  padding-left: 100px; /* Espacio a los costados */
+  padding-right: 100px; /* Espacio a los costados */
+}
+
+.card {
+  flex: 1 1 250px; /* El ancho mínimo de cada carta es 250px */
+  max-width: 300px; /* El ancho máximo de cada carta es 300px */
+  box-sizing: border-box;
+  margin-bottom: 20px; /* Espacio entre las filas */
+}

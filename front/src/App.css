@@ -1,0 +1,359 @@
+@font-face {
+  font-family: 'HangoverFont';
+  src: local('HangoverFont'), url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap') format('woff');
+}
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+.centrador{
+  display:flex; 
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; 
+}
+h2{
+  font-weight: 600;
+}
+.centradorRow{
+  display: flex; 
+  justify-content: space-between;
+  width: 80%;
+}
+#root{
+  display: flex;
+  flex-direction: column;
+}
+.wrapbusqueda {
+  columns: 5;
+}
+body{
+  margin-top: 11vh;
+}
+
+.wrapbusqueda-impar {
+  display: block;
+  grid-auto-rows: 5;
+  grid-gap: 10px;
+  justify-content: center;
+}
+
+.wrapbusqueda-par {
+  display: block;
+  grid-auto-rows: 5;
+  grid-gap: 1px;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .wrapbusqueda{
+    columns: 1;
+  }
+  .Recomendados{
+    max-width: 10rem
+  }
+  .Seguidos{
+    max-width: 10rem
+  }
+  .card{
+    max-width: 200px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 240px;
+  padding: 2rem 0.5rem;
+  margin: 15px 1px;
+  text-align: center;
+  position: relative;
+  border-radius: 2.6rem;
+  background-color: #ffffff;
+  border: 3.0px solid rgba(56, 117, 109);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(0.97);
+}
+.headerCointain{
+  height: auto;
+}
+.header {
+  background-color: rgba(56, 117, 109);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 50px;
+  padding-right: 50px;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  left:0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-direction: row;
+}
+
+ul {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  margin-right: 20px;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+li.busqueda {
+  margin-right: auto;
+}
+
+.busqueda input[type="search"] {
+  border-radius: 9rem;
+  box-shadow: rgba(0, 0, 0, 0.164) 0px 0px;
+  border: 0px solid #ccc; /* Borde */
+  border-radius: 10px; /* Bordes redondeados */
+  padding-left: 10px;
+}
+.busqueda input[type="search"]::-webkit-search-cancel-button{
+  display: none;
+}
+
+li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 200;
+  font-size: 18px;
+}
+.busquedaIcono{
+  width: 1vw;
+  height: auto;
+}
+li a:hover {
+  text-shadow: 0.001px 0 0 white;
+}
+.navBotonesNavbar{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  position:absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+.botonesNavbar {
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+  
+}
+
+.botonesNavbar li {
+  margin: 1rem 1rem;
+}
+.userThingsA{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  z-index:1000;
+  cursor:pointer;
+  gap:1rem;
+  
+}
+.userThingsDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.botonesNavbar a {
+  color: rgb(255, 255, 255);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 15px;
+}
+.botonesNavbar a:hover{
+  cursor: pointer;
+}
+
+* {
+  font-family: "Quicksand", sans-serif;
+}
+.compactedInfo{
+  background-color: #255952;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.4rem ;   
+  padding: 1rem;
+}
+.infoPopup{
+  transform: translateY(1.2rem) translateX(-1rem);
+  border-radius: 1.2rem ;    
+}
+.menuhamburguesa {
+  position: fixed;
+  top: 26vh;
+  right: 2vw;
+  z-index: 1001;
+}
+
+.Botones {
+  left: 0;
+}
+.busqueda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.searchForm{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.Recomendados {
+  transform-origin: top left;
+  transform: rotate(90deg) translate(0,-100%);
+  white-space: nowrap;
+  color: rgb(255, 255, 255);
+  font-weight: 400;
+  font-size: 10px;  
+  background-color: rgba(56, 117, 109);
+  width: 17rem;
+  left: 0;
+  border-top-right-radius: 21px;
+  border-top-left-radius: 21px;
+  position: fixed;
+}
+
+.Seguidos {
+  display: block;
+  transform-origin: top left;
+  transform: rotate(90deg) translate(0,-100%);
+  white-space: nowrap;
+  color: rgb(255, 255, 255);
+  font-weight: 400;
+  font-size: 10px; 
+  background-color: #255952;
+  width: 17rem;
+  left: 0;
+  border-top-right-radius: 21px;
+  border-top-left-radius: 21px;
+  position: fixed;
+  margin-top: 17.8rem;
+}
+
+.wrapper1 {
+  display: table;
+}
+
+.wrapper2 {
+  padding: 50% 0;
+  height: 0;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 1200px) {
+  .header {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Further adjustments for very small screens */
+@media screen and (max-width: 600px) {
+  .botonesNavbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .busqueda {
+    width: 100%;
+  }
+
+  .busqueda input[type="search"] {
+    max-width: none;
+  }
+}
+
+/* Nuevos estilos para el menú desplegable */
+
+.menu-desplegable {
+  position: fixed;
+  top: 60px; /* Ajusta este valor según la altura de tu navbar */
+  right: -300px;
+  width: 300px;
+  height: calc(100vh - 60px); /* Resta la altura del navbar */
+  background-color: rgb(42, 96, 89);
+    transition: right 0.3s ease-in-out;
+  z-index: 999; /* Asegúrate de que esté por debajo del navbar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-desplegable.active {
+  right: 0;
+}
+
+.menu-desplegable p {
+  color: white;
+  font-size: 24px;
+}
+
+.menu__icon {
+  width: 30px;
+  height: 25px;
+  position: relative;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.menu__icon span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: #38756d;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+.menu__icon span:nth-child(1) {
+  top: 0px;
+}
+
+.menu__icon span:nth-child(2) {
+  top: 10px;
+}
+
+.menu__icon span:nth-child(3) {
+  top: 20px;
+}
+
+.menu__icon.active span:nth-child(1) {
+  top: 10px;
+  transform: rotate(135deg);
+}
+
+.menu__icon.active span:nth-child(2) {
+  opacity: 0;
+  left: -60px;
+}
+
+.menu__icon.active span:nth-child(3) {
+  top: 10px;
+  transform: rotate(-135deg);
+}
