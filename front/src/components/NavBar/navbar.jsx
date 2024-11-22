@@ -106,13 +106,21 @@ const Navbar = () => {
                  <div className="centrador"> <button type="submit"><img className='busquedaIcono' src={magGlass}></img></button></div>
                 </form> 
               </div></li>
-            <li><Link to="/chatsview">Mensajes</Link></li>
+            <li>
+            {isLoggedIn ? (
+                <Link to="/chatsview">Mensajes</Link>
+              ) : (
+                <a onClick={openModal}>Mensajes</a>
+              )}
+              </li>
+            
             <li><div onMouseEnter={openInfoThingy} onMouseLeave={closeInfo}> {
              infoPopupVisible  && (<div className='infoPopup'>
               <div className="compactedInfo">
             <Link to="/informacion/legal">Información legal</Link>
             <Link to="/informacion/privacidad">Información de privacidad</Link>
             <Link to="/informacion/contacto"> Contáctanos</Link>
+            <Link to="/informacion/terminos"> Terminos de uso</Link>
             </div>
            </div>)
            } <a>

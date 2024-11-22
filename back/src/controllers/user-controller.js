@@ -33,7 +33,7 @@ router.post("/register", validateUserFields, async (req,res)=>{
     const errors = validationResult(req);
     console.log("errores regsiter", errors)
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array(), mensaje: "campos no son correctos" });
+        return res.status(400).json({ errors: errors.array(), message: "campos no son correctos" });
     }
 
     const user = new User(
@@ -51,7 +51,7 @@ router.post("/register", validateUserFields, async (req,res)=>{
     console.log("usuario: " + user.username)
 
     if (!checkBirthDate(user)) 
-       { return res.status(400).send("Debe ser mayor de 13 años"); }
+       { return res.status(400).json({message:"Debe ser mayor de 13 años"}); }
 
     const [success, statusCode, message] = await userService.TryRegister(user);
     return res.status(statusCode).send({

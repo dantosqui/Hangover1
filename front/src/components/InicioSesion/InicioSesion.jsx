@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../config";
 import "./InicioSesion.css";
-
+import { Link } from "react-router-dom";
+import Button from "../Button/Button.jsx";
 
 const InicioSesion = ({ closeModal }) => {
   const [showPopup, setShowPopup] = useState(true);
@@ -19,61 +20,63 @@ const InicioSesion = ({ closeModal }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post(config.url + "user/login/", {
         username,
         password,
       });
+  
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
-        closePopup();
-        window.location.reload();
+        // Llamar a handleLogin desde el contexto
+        handleLogin(response.data.token); // Usamos la función del contexto
+        window.location.reload(); // Recargar la página para reflejar el login
       } else {
-        // Handle error
+        window.alert("Error al iniciar sesión");
       }
     } catch (e) {
-      if (e.response && e.response.status === 404) {
-        window.confirm(
-          "Error, inicio de sesión fallido, no existe el usuario o la contraseña es incorrecta"
-        );
-      } else {
-        console.error(e);
-      }
+      console.error("Error al iniciar sesión:", e);
+      window.alert("Error al iniciar sesión");
     }
+  };
+
+  const isFormValid = () => {
+    const isPasswordValid = password.length >= 8;
+    const isAllFieldsFilled = username && password && firstName && lastName && email && dateOfBirth;
+    const isAgeValid = new Date().getFullYear() - new Date(dateOfBirth).getFullYear() >= 13;
+    return isPasswordValid && isAllFieldsFilled && isAgeValid;
+  };
+
+  const loadLogInInputs = () => {
+    setShowLoginInputs(true);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(config.url + "user/register", {
-        username: username,
+        username,
         first_name: firstName,
         last_name: lastName,
-        email: email,
-        password: password,
+        email,
+        password,
         date_of_birth: dateOfBirth,
         description: "",
         profile_photo: "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg",
-        role_id: 0
+        role_id: 0,
       });
-      
-      if (response.data.success) {
-        
-        //localStorage.setItem("token", response.data.token);
-        handleLogin(e)
-        //closePopup();
-        //window.location.reload();
-      } else {
-        window.confirm(response.data.message || "Registro fallido");
-      }
 
-    } catch (e) {
-      if (e.response && e.response.status === 400) {
-        const errorMessage = e.response.data.mensaje /*|| "Error en los campos del registro."*/;
-        window.confirm(errorMessage);
+      if (response.data.success) {
+        handleLogin(e); // Llamada a handleLogin después del registro exitoso
       } else {
-        console.error(e);
+        window.alert(response.data.message || "Registro fallido");
+      }
+    } catch (e) {
+      if (e.response) {
+        const errorMessage = e.response.data.message || "Error en los campos del registro.";
+        window.alert(errorMessage);
+      } else {
+        console.error("Error desconocido:", e);
       }
     }
   };
@@ -81,10 +84,6 @@ const InicioSesion = ({ closeModal }) => {
   const closePopup = () => {
     setShowPopup(false);
     closeModal();
-  };
-
-  const loadLogInInputs = () => {
-    setShowLoginInputs(true);
   };
 
   const toggleRegistering = () => {
@@ -152,6 +151,9 @@ const InicioSesion = ({ closeModal }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  {password && password.length < 8 && (
+                    <p className="error">La contraseña debe tener al menos 8 caracteres.</p>
+                  )}
                 </div>
                 <div className="form-group">
                   <label htmlFor="date_of_birth">Fecha de nacimiento</label>
@@ -159,17 +161,20 @@ const InicioSesion = ({ closeModal }) => {
                     type="date"
                     id="date_of_birth"
                     value={dateOfBirth}
+                    max={new Date(new Date().setFullYear(new Date().getFullYear() - 13))
+                      .toISOString()
+                      .split("T")[0]} // Fecha máxima para cumplir la restricción de 13 años
                     onChange={(e) => setDateOfBirth(e.target.value)}
                     required
                   />
                 </div>
-                
-                <button
+                <Button
                   type="submit"
                   className="inicio-sesion-btn inicio-sesion-btn-register"
+                  disabled={!isFormValid()} // Botón deshabilitado si el formulario no es válido
                 >
                   Registrarse
-                </button>
+                </Button>
               </form>
             ) : showLoginInputs ? (
               <form onSubmit={handleLogin}>
@@ -231,8 +236,8 @@ const InicioSesion = ({ closeModal }) => {
             )}
             <p className="inicio-sesion-terms">
               Al seguir usando una cuenta en <b>Argentina</b> aceptas los{" "}
-              <a href="#">Términos de uso</a> y confirmas que has leído la{" "}
-              <a href="#">Política de privacidad</a>
+              <Link to="/informacion/terminos">Términos de uso</Link> y confirmas que has leído la{" "}
+              <Link to="/informacion/privacidad" onClick={closeModal}>Política de privacidad</Link>
             </p>
             <hr className="inicio-sesion-divider" />
             {!isRegistering && (

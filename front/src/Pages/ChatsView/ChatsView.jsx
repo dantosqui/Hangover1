@@ -28,7 +28,7 @@ const ChatView = () => {
             setOwnId(response.data.ownId);
         } catch (err) {
             console.error('Error fetching recent chats:', err);
-            setError('Error fetching recent chats');
+            setError('Error al obtener los chats recientes');
             setLoading(false);
         }
     };
@@ -49,7 +49,7 @@ const ChatView = () => {
             setFriendsLoading(false);
         } catch (err) {
             console.error('Error fetching friends:', err);
-            setFriendsError('Error fetching friends');
+            setFriendsError('Error al obtener los amigos');
             setFriendsLoading(false);
         }
     };
@@ -74,7 +74,7 @@ const ChatView = () => {
         const groupName = groupNameRef.current.value; // Obtener el nombre del grupo
 
         if (!groupName || selectedFriends.length === 0) {
-            alert("Please provide a group name and select at least one friend.");
+            alert("Por favor, proporciona un nombre para el grupo y selecciona al menos un amigo.");
             return;
         }
 
@@ -89,17 +89,17 @@ const ChatView = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             fetchRecentChats();
-            alert('Group created successfully!');
+            alert('¡Grupo creado con éxito!');
             closeModal();
             
         } catch (error) {
             console.error('Error creating group:', error);
-            alert('Error creating group');
+            alert('Error al crear el grupo');
         }
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>Cargando...</div>;
     }
 
     if (error) {
@@ -108,7 +108,7 @@ const ChatView = () => {
 
     return (
         <div className="chat-view">
-            <h2>Recent Chats</h2>
+            <h2>Chats recientes</h2>
             <ul>
                 {chats.map((chat) => (
                     <li key={chat.id}>
@@ -119,7 +119,7 @@ const ChatView = () => {
                                 ) : (
                                     <strong>{chat.username}</strong>
                                 )}
-                                <span>Last message: {new Date(chat.last_message_time).toLocaleString()}</span>
+                                <span>Último mensaje: {new Date(chat.last_message_time).toLocaleString()}</span>
                             </div>
                         </Link>
                     </li>
@@ -133,7 +133,7 @@ const ChatView = () => {
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2>Select Friends</h2>
+                        <h2>Selecciona Amigos</h2>
 
                         {/* Mostrar los amigos seleccionados */}
                         <div className="selected-friends">
@@ -155,7 +155,7 @@ const ChatView = () => {
 
                         {/* Cargar lista de amigos */}
                         {friendsLoading ? (
-                            <div>Loading friends...</div>
+                            <div>Cargando amigos...</div>
                         ) : friendsError ? (
                             <div>{friendsError}</div>
                         ) : (
@@ -169,8 +169,8 @@ const ChatView = () => {
                         )}
 
                         
-                        <Button onClick={closeModal}>Close</Button>
-                        <Button onClick={createGroup}>Create</Button>
+                        <Button onClick={createGroup}>Crear</Button>
+                        <Button onClick={closeModal}>Cancelar</Button>
                     </div>
                 </div>
             )}

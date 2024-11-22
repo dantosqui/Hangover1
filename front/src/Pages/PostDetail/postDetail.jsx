@@ -24,13 +24,14 @@ const PostDetail = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [commentsAllowed, setCommentsAllowed] = useState(true);
+  
 
    // Nuevos estados para talle y cantidad
    const [size, setSize] = useState(""); // Sin talle por defecto
    const [quantity, setQuantity] = useState(1); // Cantidad por defecto en 1
    const [errorMessage, setErrorMessage] = useState(""); // Para mensajes de error
 
-  const { isLoggedIn, openModalNavBar } = useContext(AuthContext);
+  const { user, isLoggedIn, openModalNavBar } = useContext(AuthContext);
 
 
   // Función para agregar al carrito
@@ -388,11 +389,11 @@ const PostDetail = () => {
           <p className={styles.description}>{post.description}</p>
           <Link to={"/user/" + post.creatoruser.id}>
             <div className={styles.creator}>
-              <img
-                src={post.creatoruser.profile_photo}
-                alt="Profile"
-                className={styles.creatorImage}
-              />
+            <img
+              src={isLoggedIn ? user.profile_photo : "../../vendor/profileicon.png"} // Aquí usas la URL de la foto de perfil del usuario logueado
+              alt="Profile"
+              className={styles.creatorImage}
+            />
               <div className={styles.creatorInfo}>
                 <h3>{post.creatoruser.username}</h3>
                 <p>{post.creatoruser.follower_number} seguidores</p>
@@ -414,10 +415,11 @@ const PostDetail = () => {
                           className={styles.commentItem}
                         >
                           <img
-                            src={commentData.comment.profile_photo}
-                            alt="Commenter"
-                            className={styles.commenterImage}
-                          />
+                              src={commentData.comment.profile_photo || "../../vendor/profileicon.png"}
+                              alt="Commenter"
+                              className={styles.commenterImage}
+                            />
+
                           <div>
                             <strong>{commentData.comment.username} {getRelativeTime(commentData.comment.date)}</strong>
                             <p>{commentData.comment.content}</p>

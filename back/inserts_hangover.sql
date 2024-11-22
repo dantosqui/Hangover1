@@ -1,8 +1,8 @@
 -- Insert into roles
-INSERT INTO roles (role) VALUES ('admin'), ('user'), ('moderator');
+
 
 -- Insert into visibilities
-INSERT INTO visibilities (visibility) VALUES ('public'), ('private'), ('friends');
+
 
 -- Insert into users
 INSERT INTO users (username, first_name, last_name, email, password, date_of_birth, description, profile_photo, role_id)
