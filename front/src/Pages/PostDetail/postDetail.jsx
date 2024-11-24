@@ -30,10 +30,21 @@ const PostDetail = () => {
    const [size, setSize] = useState(""); // Sin talle por defecto
    const [quantity, setQuantity] = useState(1); // Cantidad por defecto en 1
    const [errorMessage, setErrorMessage] = useState(""); // Para mensajes de error
+  const [currentUser, setCurrentUser] = useState(null);
+  const { fetchUserInfo, isLoggedIn, openModalNavBar } = useContext(AuthContext);
 
-  const { user, isLoggedIn, openModalNavBar } = useContext(AuthContext);
-
-
+  useEffect(() => {
+    const fetchfetch = async () => {
+    const user=await fetchUserInfo()
+    if(user){
+      setCurrentUser(user)
+    }
+    else{
+      setCurrentUser(null)
+    }
+    }
+    fetchfetch()
+   }, []);
   // Función para agregar al carrito
     const agregarCarritoHandler = async () => {
     if (!size) {
@@ -166,7 +177,6 @@ const PostDetail = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("userdata", response);
         const { post, comments, liked, saved, canComment } = response.data;
         setSaved(saved);
         setPost(post[0]);
@@ -390,7 +400,7 @@ const PostDetail = () => {
           <Link to={"/user/" + post.creatoruser.id}>
             <div className={styles.creator}>
             <img
-              src={isLoggedIn ? user.profile_photo : "../../vendor/profileicon.png"} // Aquí usas la URL de la foto de perfil del usuario logueado
+              src={post.creatoruser.profile_photo} 
               alt="Profile"
               className={styles.creatorImage}
             />
@@ -445,7 +455,7 @@ const PostDetail = () => {
                     </div>
                     <div className={styles.newComment}>
                       <img
-                        src="https://randomuser.me/api/portraits/men/8.jpg"
+                        src={currentUser ? currentUser.profile_photo : "../../vendor/profileicon.png"}
                         alt="Profile"
                         className={styles.creatorImage}
                       />

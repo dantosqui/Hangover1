@@ -8,6 +8,7 @@ import axios from 'axios';
 import config from '../../config';
 import ContextMenu from '../../components/ContextMenu/ContextMenu';
 import { redirect, useLocation, useNavigate } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 
 const Designer = () => {
   const location = useLocation();
@@ -206,8 +207,9 @@ const Designer = () => {
   };
 
   const handleTextResizeStop = (id, width, height) => {
-    const newFontSize = Math.min(width, height)/3.5; // Adjust as needed
-    setTexts(prevTexts => prevTexts.map((text) => (text.id === id ? { ...text, width, height, fontSize: `${newFontSize}px` } : text)));
+    setTexts(prevTexts => prevTexts.map((text) => 
+      text.id === id ? { ...text, width, height } : text
+    ));
   };
 
   const handleFontColorChange = (id, color) => {
@@ -630,21 +632,21 @@ const Designer = () => {
  
   return (
     <div className="designer" onClick={handleClick}>
-      <h2>Create a Design</h2>
+      <h2>Crea un Diseño</h2>
       
       <div className="view-controls">
         <button 
           className={`view-button ${currentView === 'front' ? 'active' : ''}`}
-          onClick={() => setCurrentView('front')}
+          onClick={() => {setCurrentView('front');clearSelection()}}
           
         >
-          Front View
+          Vista Frontal
         </button>
         <button 
           className={`view-button ${currentView === 'back' ? 'active' : ''}`}
-          onClick={() => setCurrentView('back')}
+          onClick={() => {setCurrentView('back'); clearSelection()}}
         >
-          Back View
+          Vista Trasera
         </button>
       </div>
      
@@ -654,27 +656,27 @@ const Designer = () => {
           <input type="color" value={color} onChange={handleColorChange} />
         </label>
         <label>
-          Pattern:
+          Patrón:
           <select value={pattern} onChange={handlePatternChange}>
-            <option value="none">None</option>
-            <option value="stripes">Stripes</option>
-            <option value="dots">Dots</option>
-            <option value="diagonal-stripes">Diagonal Stripes</option>
-            <option value="grid">Grid</option>
+            <option value="none">Ninguno</option>
+            <option value="stripes">Rayas</option>
+            <option value="dots">Puntos</option>
+            <option value="diagonal-stripes">Rayas Diagonales</option>
+            <option value="grid">Cuadrícula</option>
             <option value="zigzag">Zig Zag</option>
           </select>
         </label>
         <label>
-          Pattern Color:
+          Color del Patrón:
           <input type="color" onChange={handlePatternColorChange} />
         </label>
-        <button className="designer-button" onClick={addTextInput}>+ Text</button>
+        <button className="designer-button" onClick={addTextInput}>+ Texto</button>
         
-        <button className="designer-button" onClick={addShape}>+ Shape</button>
+        <button className="designer-button" onClick={addShape}>+ Forma</button>
         
          {/* Imágenes */}
       
-         <label for="file-upload" className='designer-button'>+ Image</label>
+         <label for="file-upload" className='designer-button'>+ Imagen</label>
 <input className='inputParaEsconder' type="file" id="file-upload" onChange={addImage} accept="image/*" />
 
       
@@ -684,11 +686,11 @@ const Designer = () => {
         {canDraw ? '✏️' : '✏️'}
       </button>
       <label>
-        Drawing Color:
+        Color del Dibujo:
         <input type="color" value={drawingColor} onChange={(e) => setDrawingColor(e.target.value)} />
       </label>
       <label>
-        Brush Size:
+        Tamaño del Pincel:
         <input type="range" min="1" max="20" value={brushSize} onChange={handleBrushSizeChange} />
         {brushSize}px
       </label>
@@ -753,7 +755,7 @@ const Designer = () => {
               
               {console.log(selectedItem)}
               <p>{selectedItem.name}</p>
-              <button className="designer-button" onClick={() => removeImage(selectedItem.id)}>Remove Image</button>
+              <button className="designer-button" onClick={() => removeImage(selectedItem.id)}>Eliminar Imagen</button>
             </div>
           )}
      {selectedItem.shape &&
@@ -763,11 +765,11 @@ const Designer = () => {
               value={selectedItem.shape}
               onChange={(e) => handleShapeChange(selectedItem.id, e.target.value)}
             >
-              <option value="square">Square</option>
-              <option value="circle">Circle</option>
-              <option value="rectangle">Rectangle</option>
-              <option value="triangle">Triangle</option>
-              <option value="diamond">Diamond</option>
+              <option value="square">Cuadrado</option>
+              <option value="circle">Círculo</option>
+              <option value="rectangle">Rectángulo</option>
+              <option value="triangle">Triángulo</option>
+              <option value="diamond">Diamante</option>
             </select>
             <button className="designer-button" onClick={() => removeShape(selectedItem.id)}>-</button>
           </div>
@@ -864,7 +866,7 @@ const Designer = () => {
         <Rnd
           key={text.id}
           onContextMenu={(e) => handleRightClickOnItem(e, text, "text")}
-          size={{ width: text.width, height: text.height }}
+          size={{ width: text.width, height: 'auto' }} // Set height to auto
           position={{ x: text.x, y: text.y }}
           style={{ 
             zIndex: text.z,
@@ -881,7 +883,7 @@ const Designer = () => {
             handleTextResizeStop(text.id, parseInt(ref.style.width, 10), parseInt(ref.style.height, 10));
             handleTextDragStop(text.id, position.x, position.y);
           }}
-          enableResizing={selectedItem && selectedItem.id === text.id}
+          enableResizing={{ right: true, left: true }} // Restrict resizing to horizontal only
           disableDragging={!selectedItem || selectedItem.id !== text.id}
         >
           <div
@@ -892,7 +894,11 @@ const Designer = () => {
               width: '100%', 
               height: '100%', 
               color: text.color,
-              border: selectedItem && selectedItem.id === text.id ? '2px dashed #000' : 'none'
+              border: selectedItem && selectedItem.id === text.id ? '2px dashed #000' : 'none',
+              wordWrap: 'break-word', // Ensure text wraps within its container
+              overflow: 'hidden', // Hide overflow text
+              whiteSpace: 'pre-wrap', // Ensure text goes to a new line within its container
+              wordBreak: 'break-all' // Ensure long words also wrap within the container
             }}
           >
             {text.text}
@@ -981,7 +987,7 @@ const Designer = () => {
       {hasChanges ? (
       <div className="centrador">
         <button className="designer-button" onClick={handleCapture}>
-          Guardar diseño {currentView === 'front' ? 'Front' : 'Back'} View
+          Guardar diseño {currentView === 'front' ? 'Vista Frontal' : 'Vista Trasera'}
         </button>
       </div>
     ) : (

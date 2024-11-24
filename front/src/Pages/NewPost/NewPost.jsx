@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config';
 import './NewPost.css'
+import Button from '../../components/Button/Button';
 
 const NewPost = () => {
     const [title, setTitle] = useState('');
@@ -53,7 +54,7 @@ const NewPost = () => {
 
     return (
         <div className="new-post-container">
-            <h2>Create a New Post</h2>
+            <h2>Subir un diseño</h2>
             <form className="new-post-form" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="title">Titulo:</label>
@@ -125,7 +126,7 @@ const NewPost = () => {
                     />
                 </div>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
-                <button className="submit-button" type="submit">Publicar</button>
+                <Button type="submit">Publicar</Button>
             </form>
         </div>
     );

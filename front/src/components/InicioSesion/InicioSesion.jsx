@@ -28,9 +28,11 @@ const InicioSesion = ({ closeModal }) => {
       });
   
       if (response.data.success) {
-        // Llamar a handleLogin desde el contexto
-        handleLogin(response.data.token); // Usamos la función del contexto
-        window.location.reload(); // Recargar la página para reflejar el login
+
+        localStorage.setItem("token",response.data.token);
+        console.log(localStorage.getItem("token"))
+        closePopup()
+        window.location.reload(); 
       } else {
         window.alert("Error al iniciar sesión");
       }

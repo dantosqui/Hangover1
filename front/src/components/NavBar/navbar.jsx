@@ -120,7 +120,7 @@ const Navbar = () => {
             <Link to="/informacion/legal">Información legal</Link>
             <Link to="/informacion/privacidad">Información de privacidad</Link>
             <Link to="/informacion/contacto"> Contáctanos</Link>
-            <Link to="/informacion/terminos"> Terminos de uso</Link>
+            <Link to="/informacion/terminos"> Términos de uso</Link>
             </div>
            </div>)
            } <a>
