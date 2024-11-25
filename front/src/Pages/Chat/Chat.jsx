@@ -8,24 +8,25 @@ import config from '../../config';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-  width: 55vw;
+  width: 100%;
   margin: 0;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding-bottom:20px;
 `;
 
 const Messages = styled.div`
   max-height: 60vh;
   min-height: 60vh;
   overflow-y: auto;
-  padding-right: 20px;
+  padding: 0 20% 0 20%;
   padding-bottom: 20px;
 `;
 
 const StyledMessage = styled.div`
-  background-color: ${(props) => (props.$isOwnMessage ? '#ccffcc' : 'grey')};
+  background-color: ${(props) =>
+    props.$isOwnMessage ? '#ccffcc' : 'rgba(200, 200, 200, 0.6)'};
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -38,6 +39,12 @@ const StyledMessage = styled.div`
   overflow: hidden;
   padding-right: 40px;
   float: ${(props) => (props.$isOwnMessage ? 'right' : 'left')};
+`;
+
+const SenderName = styled.span`
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 `;
 
 const MessageContent = styled.span`
@@ -58,6 +65,7 @@ const MessageTime = styled.span`
 const ChatForm = styled.form`
   display: flex;
   margin-top: 20px;
+  padding: 0 20% 0 20%;
 `;
 
 const MessageInput = styled.input`
@@ -110,6 +118,16 @@ const DateDivider = styled.div`
   margin: 10px 0;
   font-size: 14px;
   color: #666;
+`;
+
+const ChatHeader = styled.div`
+  background-color: rgba(56, 117, 109, 1);
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  padding: 10px 0;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 `;
 
 
@@ -291,7 +309,10 @@ const Chat = ({ ownId, chatId }) => {
 
   return (
     <Container>
-      {chatName !== null ? (<h1>{chatName}</h1>) : (<h1>{chatMembers[1]}</h1>)}
+      <ChatHeader>
+        {chatName !== null ? chatName : chatMembers[1]}
+      </ChatHeader>
+
       <Messages id="messages" ref={messagesContainerRef}>
         {Object.entries(groupedMessages).map(([date, msgs], groupIndex) => (
           <React.Fragment key={date}>
@@ -302,7 +323,7 @@ const Chat = ({ ownId, chatId }) => {
                 $isOwnMessage={msg.sender_user === +ownId}
                 ref={groupIndex === 0 && index === 0 ? lastMessageRef : null}
               >
-                {chatName !== null ? <span>{msg.username}</span> : null }
+                <SenderName>{msg.sender_user !== +ownId ? msg.username : 'Tú'}</SenderName>
                 <MessageContent>{msg.content}</MessageContent>
                 <MessageTime>{formatTime(msg.date_sent)}</MessageTime>
               </StyledMessage>
@@ -332,7 +353,7 @@ const Chat = ({ ownId, chatId }) => {
           data={data}
           onEmojiSelect={addEmoji}
           style={{
-            position:"absolute",
+            position: "absolute",
             marginTop: "465px",
             marginLeft: -40,
             maxWidth: "320px",

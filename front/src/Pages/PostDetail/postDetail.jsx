@@ -144,7 +144,7 @@ const PostDetail = () => {
         {
           comment: {
             comment_id: newComment.comment_id,
-            username: "YourUsername",
+            username: currentUser.username,
             content: newCommentContent,
             profile_photo: "URL_TO_YOUR_PROFILE_PHOTO",
             date: new Date().toISOString(),

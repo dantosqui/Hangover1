@@ -67,7 +67,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 // Servir archivos estáticos desde src/vendor
-app.use('/src/vendor', express.static(path.join(__dirname, 'src', 'vendor')));
+app.use('/src/vendor', express.static(path.join(__dirname, 'src', 'vendor', 'imgs')));
 
 // Middleware para manejar errores de multer
 app.use((err, req, res, next) => {
@@ -86,6 +86,7 @@ app.use((err, req, res, next) => {
 
 // Ruta para subir imágenes
 app.post('/vendor/upload', upload.single('image'), (req, res) => {
+  console.log("post corrido")
   if (!req.file) {
     return res.status(400).json({ error: 'No se ha proporcionado ningún archivo' });
   }
@@ -96,7 +97,7 @@ app.post('/vendor/upload', upload.single('image'), (req, res) => {
     filepath: `/src/vendor/imgs/${req.file.filename}`
   });
   console.log("---------------------------------------------------------------------")
-  console.log( "ESTE ES EL FILE.FILENAME OK?? SI ES ESTE:"+ req.file.filename)
+  console.log( "Filename:"+ req.file.filename)
 });
 
 app.use("/post", PostsController);

@@ -5,7 +5,7 @@ import { AuthContext } from "../../AuthContext.js";
 import { guardarHandler, eliminarGuardadoHandler } from "../../universalhandlers.js";
 import standardUser from "../../vendor/imgs/standardUser.png"; // Import the default image
 
-function CartaSimple({ className, profile_photo, username, user_id, cloth, post_id, onClickFunction, putLike }) {
+function CartaSimple({ className, profile_photo, username, user_id, cloth, post_id, onClickFunction, putLike , isPublished,design_id}) {
   const { isLoggedIn, openModalNavBar } = useContext(AuthContext);
   const [saved, setSaved] = useState(false);
 
@@ -16,34 +16,24 @@ function CartaSimple({ className, profile_photo, username, user_id, cloth, post_
           <img className="profpic" src={profile_photo || standardUser} alt="Foto de perfil" />
           <span className="user">{username}</span>
         </Link>
-        {putLike && (saved ? (
-          <Link 
-            className="Guardado" 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              eliminarGuardadoHandler(post_id, setSaved);
-            }}
-          >
-            Guardado
-          </Link>
-        ) : (
-          <Link 
-            className="Guardar" 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              guardarHandler(post_id, setSaved, isLoggedIn, openModalNavBar);
-            }}
-          >
-            Guardar
-          </Link>
-        ))}
+        
       </div>
       <div className="content" onClick={onClickFunction}>
         <img className="remerita" src={cloth} alt="Ropa" />
       </div>
+      {isPublished ? (
+          <div className="Guardar">Publicado</div>
+        ) : (
+          <Link 
+            to={`/NewPost/`+design_id} 
+            className="Guardar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Publicar
+          </Link>
+        )}
     </div>
+    
   );
 }
 

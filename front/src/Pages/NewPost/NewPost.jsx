@@ -42,6 +42,7 @@ const NewPost = () => {
 
             if (response.status === 201) {
                 console.log("Post created successfully!");
+                console.log(title)
                 window.location.href = '/'; // southside
             } else {
                 setErrorMessage("Failed to create post");

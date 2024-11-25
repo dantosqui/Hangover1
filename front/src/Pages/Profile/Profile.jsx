@@ -111,7 +111,6 @@ const Profile = () => {
         // Subir la imagen
         const token = localStorage.getItem("token");
         const response = await axios.post(
-          console.log("post post post post post post post post post post ")
           `${config.url}vendor/upload`,
           imageFormData,
           {
@@ -121,7 +120,7 @@ const Profile = () => {
             }
           }
         );
-        console.log("get get get get get get get get")
+        console.log("response", response)
 
 
         // Actualizar el formData con la ruta local de la imagen
@@ -142,14 +141,16 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      
+      const newProfilePhoto = formData.profile_photo || userData.user_data.profile_photo;
+
       // Crear una copia del formData para enviar
       const dataToSend = {
         ...formData,
+        profile_photo: formData.profile_photo || userData.user_data.profile_photo
         // Asegurarnos de que la ruta de la imagen sea relativa
-        profile_photo: formData.profile_photo.startsWith('/src') 
-          ? formData.profile_photo 
-          : userData.user_data.profile_photo
+        // profile_photo: formData.profile_photo.startsWith('/src') 
+        //   ? formData.profile_photo 
+        //   : userData.user_data.profile_photo
       };
 
       await axios.put(
@@ -160,12 +161,14 @@ const Profile = () => {
         }
       );
       
+      
       // Actualizar los datos del usuario después de guardar
       setUserData({
         ...userData,
         user_data: { 
           ...userData.user_data, 
-          ...dataToSend
+          ...dataToSend, 
+          profile_photo: newProfilePhoto
         },
       });
       setEditing(false);

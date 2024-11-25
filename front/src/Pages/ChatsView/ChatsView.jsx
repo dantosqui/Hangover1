@@ -3,7 +3,7 @@ import axios from 'axios';
 import './ChatsView.css';
 import config from '../../config';
 import Button from '../../components/Button/Button';
-import Chat from '../Chat/Chat'; // Import the Chat component
+import Chat from '../Chat/Chat';
 
 const ChatView = () => {
     const [chats, setChats] = useState([]);
@@ -12,7 +12,6 @@ const ChatView = () => {
     const [ownId, setOwnId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [friends, setFriends] = useState([]);
-    const [selectedFriends, setSelectedFriends] = useState([]);
     const [friendsLoading, setFriendsLoading] = useState(false);
     const [friendsError, setFriendsError] = useState(null);
     const [selectedChatId, setSelectedChatId] = useState(null);
@@ -23,7 +22,7 @@ const ChatView = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`${config.url}chat/get/chats`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
             });
             setChats(response.data.chats);
             setLoading(false);
@@ -45,9 +44,11 @@ const ChatView = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`${config.url}user/friends`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
             });
-            setFriends(response.data);
+            setFriends(
+                response.data.map((friend) => ({ ...friend, selected: false }))
+            );
             setFriendsLoading(false);
         } catch (err) {
             console.error('Error fetching friends:', err);
@@ -60,21 +61,22 @@ const ChatView = () => {
         setIsModalOpen(false);
     };
 
-    const selectFriend = (friend) => {
-        if (!selectedFriends.includes(friend)) {
-            setSelectedFriends([...selectedFriends, friend]);
-        }
-    };
-
-    const removeFriend = (friend) => {
-        setSelectedFriends(selectedFriends.filter(f => f.id !== friend.id));
+    const toggleFriendSelection = (friendId) => {
+        setFriends((prevFriends) =>
+            prevFriends.map((friend) =>
+                friend.id === friendId
+                    ? { ...friend, selected: !friend.selected }
+                    : friend
+            )
+        );
     };
 
     const createGroup = async () => {
         const groupName = groupNameRef.current.value;
+        const selectedFriends = friends.filter((friend) => friend.selected);
 
         if (!groupName || selectedFriends.length === 0) {
-            alert("Por favor, proporciona un nombre para el grupo y selecciona al menos un amigo.");
+            alert('Por favor, proporciona un nombre para el grupo y selecciona al menos un amigo.');
             return;
         }
 
@@ -89,9 +91,7 @@ const ChatView = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             fetchRecentChats();
-            
             closeModal();
-            
         } catch (error) {
             console.error('Error creating group:', error);
             alert('Error al crear el grupo');
@@ -110,14 +110,14 @@ const ChatView = () => {
         <div className="chat-view-container">
             <div className="chats-list-contain">
                 <h2>Chats recientes</h2>
-                <ul className='chatList'>
+                <ul className="chatList">
                     {chats.map((chat) => (
-                        <li 
+                        <li
                             key={chat.id}
                             onClick={() => setSelectedChatId(chat.id)}
                             className={selectedChatId === chat.id ? 'selected' : ''}
                         >
-                            <div className='chatCard'>
+                            <div className="chatCard">
                                 {chat.name !== null ? (
                                     <strong>{chat.name}</strong>
                                 ) : (
@@ -128,8 +128,10 @@ const ChatView = () => {
                         </li>
                     ))}
                 </ul>
-                <div className='newChatButtonWrapper'>
-                <Button className="newChat" onClick={openModal}>+</Button>
+                <div className="newChatButtonWrapper">
+                    <Button className="newChat" onClick={openModal}>
+                        +
+                    </Button>
                 </div>
             </div>
 
@@ -142,32 +144,27 @@ const ChatView = () => {
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2>Selecciona Amigos</h2>
+                        <h2>Crear chat</h2>
 
-                        <div className="selected-friends">
-                            {selectedFriends.map((friend) => (
-                                <div key={friend.id} onClick={() => removeFriend(friend)} className="selected-friend">
-                                    {friend.username}
-                                </div>
-                            ))}
-                        </div>
-
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Nombre de grupo"
-                                ref={groupNameRef}
-                            />
-                        </div>
+                        <input
+                            type="text"
+                            placeholder="Nombre de grupo"
+                            ref={groupNameRef}
+                            defaultValue="Nuevo grupo"
+                        />
 
                         {friendsLoading ? (
                             <div>Cargando amigos...</div>
                         ) : friendsError ? (
                             <div>{friendsError}</div>
                         ) : (
-                            <ul>
+                            <ul className="friends-list">
                                 {friends.map((friend) => (
-                                    <li className='friend' key={friend.id} onClick={() => selectFriend(friend)}>
+                                    <li
+                                        key={friend.id}
+                                        className={`friend ${friend.selected ? 'selected' : ''}`}
+                                        onClick={() => toggleFriendSelection(friend.id)}
+                                    >
                                         {friend.username}
                                     </li>
                                 ))}
