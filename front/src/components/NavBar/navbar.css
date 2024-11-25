@@ -62,10 +62,11 @@
     display: flex; /* Show nav items in a row by default */
   }
   
-  .profPic{
+  .profPic {
     width: 2vw;
-    border-radius: 100%;
-    height: auto;
+    height: 2vw; /* Set height to the same value as width */
+    border-radius: 50%; /* Make it a circle */
+    object-fit: cover; /* Ensure the image covers the area */
   }
   @media (max-width: 1234px) { /* Adjust the max-width as needed */
     .hamburger {

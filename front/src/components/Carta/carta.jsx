@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../AuthContext.js";
 import { guardarHandler, eliminarGuardadoHandler } from "../../universalhandlers.js";
+import standardUser from "../../vendor/imgs/standardUser.png"; // Import the default image
 
 function Carta({ className, profile_photo, username, user_id, cloth, post_id, onClickFunction, putLike }) {
   const { isLoggedIn, openModalNavBar } = useContext(AuthContext);
@@ -12,7 +13,7 @@ function Carta({ className, profile_photo, username, user_id, cloth, post_id, on
     <div className={`card ${className}`}>
       <div className="guardador">
         <Link className="description" to={`/user/${user_id}`} onClick={(e) => e.stopPropagation()}>
-          <img className="profpic" src={profile_photo} alt="Foto de perfil" />
+          <img className="profpic" src={profile_photo || standardUser} alt="Foto de perfil" />
           <span className="user">{username}</span>
         </Link>
         {putLike && (saved ? (

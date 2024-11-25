@@ -517,6 +517,7 @@ const Designer = () => {
   };
   const handleCapture = async () => {
     if (shirtRef.current && isLoggedIn) {
+      clearSelection()
       const canvas = await html2canvas(shirtRef.current);
       const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
       saveImage(dataUrl);
