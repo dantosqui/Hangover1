@@ -176,7 +176,7 @@ const PostDetail = () => {
           },
           headers: { Authorization: `Bearer ${token}` },
         });
-
+        console.log(response.data)
         const { post, comments, liked, saved, canComment } = response.data;
         setSaved(saved);
         setPost(post[0]);

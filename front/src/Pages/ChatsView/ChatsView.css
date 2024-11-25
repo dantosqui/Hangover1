@@ -20,7 +20,7 @@
 }
 
 .selected {
-    background-color: rgba(56, 117, 109, 1);
+    background-color: rgba(56, 117, 109, 0.911);
     color: white;
 }
 

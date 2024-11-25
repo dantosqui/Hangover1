@@ -5,14 +5,15 @@
     color: white;
   }
   
-  .profile-header {
+  .profile-picture-and-name {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     background-color: rgba(56, 117, 109, 0.8);
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
+    width: max-content;
   }
   
   

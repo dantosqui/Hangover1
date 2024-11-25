@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Carta from "../../components/Carta/carta.jsx";
-import config from "../../config.js";
+import config from "../../config";
 import "./Explorar.css";
 
 const Explorar = () => {
@@ -11,13 +11,12 @@ const Explorar = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const loadedPostIds = useRef(new Set());
   const observer = useRef();
 
   const fetchPosts = useCallback(async () => {
     if (!hasMore || loading) return;
-    
     setLoading(true);
-    
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${config.url}post`, {
@@ -25,32 +24,34 @@ const Explorar = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       
-      setPosts(prevPosts => {
-        const newPosts = response.data.collection.filter(
-          (newPost) => !prevPosts.some((existingPost) => existingPost.id === newPost.id)
-        );
-        return [...prevPosts, ...newPosts];
+      const newPosts = response.data.collection.filter(newPost => {
+        // Only add posts not already loaded
+        if (!loadedPostIds.current.has(newPost.id)) {
+          loadedPostIds.current.add(newPost.id);
+          return true;
+        }
+        return false;
       });
-      
+
+      setPosts((prevPosts) => [...prevPosts, ...newPosts]);
       setHasMore(response.data.pagination.nextPage !== false);
-      setPage(prevPage => prevPage + 1);
+      setPage((prevPage) => prevPage + 1);
     } catch (error) {
       setError("Error fetching posts");
       console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
-  }, [hasMore, loading, page]); // Removed posts from dependencies
+  }, [hasMore, loading, page]);
 
   useEffect(() => {
     fetchPosts();
-  }, []); // Solo se ejecuta al montar el componente
+  }, []); 
 
   const lastPostElementRef = useCallback(
     (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
-      
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           fetchPosts();
@@ -59,7 +60,6 @@ const Explorar = () => {
         rootMargin: '100px',
         threshold: 0.1,
       });
-      
       if (node) observer.current.observe(node);
     },
     [loading, hasMore, fetchPosts]
@@ -79,6 +79,8 @@ const Explorar = () => {
             ref={index === posts.length - 1 ? lastPostElementRef : null}
           >
             <Carta
+              putLike={true}
+              className="card"
               post_id={post.id}
               profile_photo={post.post.creator_user.profile_photo}
               username={post.post.creator_user.username}

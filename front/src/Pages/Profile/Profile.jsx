@@ -141,8 +141,7 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      const newProfilePhoto = formData.profile_photo || userData.user_data.profile_photo;
-
+      
       // Crear una copia del formData para enviar
       const dataToSend = {
         ...formData,
@@ -167,8 +166,7 @@ const Profile = () => {
         ...userData,
         user_data: { 
           ...userData.user_data, 
-          ...dataToSend, 
-          profile_photo: newProfilePhoto
+          ...dataToSend
         },
       });
       setEditing(false);
@@ -200,13 +198,25 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <img
-          src={userData.user_data.profile_photo}
-          alt={userData.user_data.username}
-          className="profile-pic"
-        />
-        <div className="profile-info">
+      
+      <div className="profile-headers">
+
+        <div className="profile-picture-and-name"> {/*foto de perfil y nombre */}
+          <div className="picture">
+          <img
+            src={userData.user_data.profile_photo}
+            alt={userData.user_data.username}
+            className="profile-pic"
+            />
+            </div>
+            <div className="name">
+              <h1>{userData.user_data.first_name}</h1>
+              <p>@{userData.user_data.username}</p>
+            </div>
+        </div>
+      
+      </div>
+      <div className="profile-description"> {/* descripcion */}
           {editing ? (
             <>
               <input
@@ -215,7 +225,7 @@ const Profile = () => {
                 value={formData.first_name}
                 onChange={handleInputChange}
                 placeholder="Nombre"
-              />
+                />
 
               <input 
                 type="text"
@@ -223,20 +233,20 @@ const Profile = () => {
                 value={formData.last_name}
                 onChange={handleInputChange}
                 placeholder="Apellido"
-              />
+                />
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
                 placeholder="@Usuario"
-              />
+                />
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Descripción"
-              />
+                />
 
               <div className="image-upload">
                 <label 
@@ -247,7 +257,7 @@ const Profile = () => {
                     display: 'block',
                     position: 'relative'
                   }}
-                >
+                  >
                   <img
                     src={previewImage || formData.profile_photo || userData.user_data.profile_photo}
                     alt="Imagen de perfil"
@@ -257,7 +267,7 @@ const Profile = () => {
                       height: '150px',
                       objectFit: 'cover'
                     }}
-                  />
+                    />
                   <div 
                     style={{
                       position: 'absolute',
@@ -276,7 +286,7 @@ const Profile = () => {
                         opacity: 1
                       }
                     }}
-                  >
+                    >
                     {uploadingImage ? 'Subiendo...' : 'Cambiar imagen'}
                   </div>
                 </label>
@@ -287,7 +297,7 @@ const Profile = () => {
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
                   disabled={uploadingImage}
-                />
+                  />
               </div>
               <Button text="Guardar" onClick={handleSave} disabled={uploadingImage} />
               <Button text="Cancelar" onClick={() => {
@@ -297,19 +307,10 @@ const Profile = () => {
             </>
           ) : (
             <>
-              <h1>{userData.user_data.first_name}</h1>
-              <p>@{userData.user_data.username}</p>
-              <p>{userData.user_data.description}</p>
+            <p>{userData.user_data.description}</p>
             </>
           )}
-
-          <div className="profile-stats">
-            <span>{userData.user_data.post_number} Prendas</span>
-            <span>{userData.user_data.follower_number} Seguidores</span>
-            <span>{userData.user_data.followed_number} Seguidos</span>
-          </div>
-        </div>
-        <div className="profile-actions">
+        <div className="profile-actions"> {/*seguir etc */}
           {isOwnProfile ? (
             <>
               <Button text="Editar Perfil" onClick={() => setEditing(true)} />
@@ -344,8 +345,17 @@ const Profile = () => {
             </>
           )}
         </div>
-      </div>
-      <section className="profile-content">
+          </div>
+
+          <div className="profile-stats"> {/* numeritos */}
+            <span>{userData.user_data.post_number} Prendas</span>
+            <span>{userData.user_data.follower_number} Seguidores</span>
+            <span>{userData.user_data.followed_number} Seguidos</span>
+          </div>
+        
+      
+
+      <section className="profile-content"> {/* mis diseños empeiza aca */}
         <div className="columns">
           {userData.posts !== null
             ? userData.posts.map((item) => (
@@ -368,6 +378,7 @@ const Profile = () => {
           </div>
       </section>
     </div>
+    
   );
 };
 
