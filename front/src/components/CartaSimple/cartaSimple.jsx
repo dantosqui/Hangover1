@@ -13,7 +13,6 @@ function CartaSimple({ className, profile_photo, username, user_id, cloth, post_
     <div className='card'>
       <div className="guardador">
         <Link className="description" to={`/user/${user_id}`} onClick={(e) => e.stopPropagation()}>
-          <img className="profpic" src={profile_photo || standardUser} alt="Foto de perfil" />
           <span className="user">{username}</span>
         </Link>
         

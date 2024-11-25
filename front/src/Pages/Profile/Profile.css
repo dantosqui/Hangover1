@@ -9,13 +9,35 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background-color: rgba(56, 117, 109, 0.8);
     padding: 20px;
-    border-radius: 10px;
     margin-bottom: 20px;
-    width: max-content;
+    background-color: rgba(56, 117, 109, 0.8); /* Mantener estilo de fondo */
+    border-radius: 10px;
+    flex-shrink: 0; /* Evitar que este div se reduzca */
+    
   }
-  
+  .profile-backgorund{
+    background-color: rgba(56, 117, 109, 0.8);
+    border-radius: 10px;
+  }
+
+  .profile-description {
+    flex-grow: 1; /* Permitir que este div ocupe todo el espacio restante */
+ 
+    align-items: center;
+    background-color: rgba(56, 117, 109, 0.8); /* Mantener estilo de fondo */
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .desc{
+    align-self: flex-center;
+  }
+  .profile-headers {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px; /* Espacio entre los divs */
+  }
   
 
   .profile-pic {
@@ -33,13 +55,17 @@
   .profile-stats {
     display: flex;
     justify-content: space-around;
+    align-items: center;
     margin-top: 10px;
+    height: 5vh;
   }
   
   .profile-actions {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    justify-content: center;
+    justify-self: flex-end;
   }
   
   .profile-content {

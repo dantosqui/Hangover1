@@ -13,19 +13,29 @@ const Explorar = () => {
   const [loading, setLoading] = useState(false);
   const loadedPostIds = useRef(new Set());
   const observer = useRef();
+  const cancelTokenSource = useRef(null);
 
   const fetchPosts = useCallback(async () => {
+    // Cancel previous request
+    if (cancelTokenSource.current) {
+      cancelTokenSource.current.cancel('New request initiated');
+    }
+
+    // Create new cancel token
+    cancelTokenSource.current = axios.CancelToken.source();
+
     if (!hasMore || loading) return;
+    
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${config.url}post`, {
         params: { limit: 10, page },
         headers: { Authorization: `Bearer ${token}` },
+        cancelToken: cancelTokenSource.current.token
       });
       
       const newPosts = response.data.collection.filter(newPost => {
-        // Only add posts not already loaded
         if (!loadedPostIds.current.has(newPost.id)) {
           loadedPostIds.current.add(newPost.id);
           return true;
@@ -33,19 +43,32 @@ const Explorar = () => {
         return false;
       });
 
-      setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+      setPosts(prevPosts => {
+        const combinedPosts = [...prevPosts, ...newPosts];
+        return combinedPosts.filter((post, index, self) => 
+          index === self.findIndex(t => t.id === post.id)
+        );
+      });
+
       setHasMore(response.data.pagination.nextPage !== false);
-      setPage((prevPage) => prevPage + 1);
+      setPage(prevPage => prevPage + 1);
     } catch (error) {
-      setError("Error fetching posts");
-      console.error("Error fetching posts:", error);
+      if (!axios.isCancel(error)) {
+        setError("Error fetching posts");
+        console.error("Error fetching posts:", error);
+      }
     } finally {
       setLoading(false);
     }
-  }, [hasMore, loading, page]);
+  }, [hasMore, page, loading]);
 
   useEffect(() => {
     fetchPosts();
+    return () => {
+      if (cancelTokenSource.current) {
+        cancelTokenSource.current.cancel('Component unmounted');
+      }
+    };
   }, []); 
 
   const lastPostElementRef = useCallback(
@@ -69,6 +92,10 @@ const Explorar = () => {
     return <div>{error}</div>;
   }
 
+  if (loading && posts.length === 0) {
+    return <div>Cargando...</div>;
+  }
+
   return (
     <div className="explorar-container">
       <div className="wrapbusqueda">
@@ -90,7 +117,8 @@ const Explorar = () => {
           </Link>
         ))}
       </div>
-      {loading && <div>Cargando...</div>}
+      {loading && posts.length > 0 && <div>Cargando más...</div>}
+      {!hasMore && <div>No hay más posts</div>}
     </div>
   );
 };

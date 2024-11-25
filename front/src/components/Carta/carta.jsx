@@ -5,7 +5,7 @@ import { AuthContext } from "../../AuthContext.js";
 import { guardarHandler, eliminarGuardadoHandler } from "../../universalhandlers.js";
 import standardUser from "../../vendor/imgs/standardUser.png"; // Import the default image
 
-function Carta({ profile_photo, username, user_id, cloth, post_id, onClickFunction }) {
+function Carta({ profile_photo, username, user_id, cloth, post_id, onClickFunction , putLike}) {
   const { isLoggedIn, openModalNavBar } = useContext(AuthContext);
   const [saved, setSaved] = useState(false);
 
@@ -16,7 +16,7 @@ function Carta({ profile_photo, username, user_id, cloth, post_id, onClickFuncti
           <img className="profpic" src={profile_photo || standardUser} alt="Foto de perfil" />
           <span className="user">{username}</span>
         </Link>
-        {(saved ? (
+        {putLike && (saved ? (
           <Link 
             className="Guardado" 
             onClick={(e) => {

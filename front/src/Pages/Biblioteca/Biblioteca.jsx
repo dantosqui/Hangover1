@@ -23,6 +23,7 @@ const LibraryPage = () => {
   const navigate = useNavigate();
   const { strictCheckAuth, fetchUserInfo } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState(null);
+  const [totalDesigns,setTotalDesigns] = useState([]);
 
   useEffect(() => {
     const initializeData = async () => {
@@ -49,19 +50,21 @@ const LibraryPage = () => {
         const postsResponse = await axios.get(`${config.url}post`, {
           params: { limit: 100, page: 1 },
           headers: { Authorization: `Bearer ${token}` }
-        });
+        } );
 
         // Crear Set de IDs de diseños publicados
         let publishedIds = new Set();
         if (postsResponse.data && Array.isArray(postsResponse.data.collection)) {
           console.log('Posts collection:', postsResponse.data.collection); // Debug log
-          
+          console.log(postsResponse.data.collection)
+          setTotalDesigns(postsResponse.data.collection)
           // Extraer los IDs directamente de la collection
           publishedIds = new Set(
             postsResponse.data.collection.map((post, index) => index + 1)
           );
+        
           
-          console.log('Published IDs Set:', Array.from(publishedIds)); // Debug log
+          console.log(totalDesigns); // Debug log
         }
         setPublishedDesigns(publishedIds);
 
@@ -95,6 +98,7 @@ const LibraryPage = () => {
   const processBlobs = async (items) => {
     try {
       return Promise.all(items.map(async (item) => {
+        
         const blobResponse = await fetch(item.image);
         const blob = await blobResponse.blob();
         const url = URL.createObjectURL(blob);
@@ -178,12 +182,13 @@ const LibraryPage = () => {
                 )}
               </div>
             ) : activeFilter !== 'borradores' ? (
-              displayedItems.map((item, index) => (
+              displayedItems.map((item, index) => ( //displayedItems trae el item mal??????
                 <div 
                   key={`${activeTab}-${item.postid}-${index}`} 
                   className="library-item" 
                   onClick={() => handleViewDesign(item.postid)}
                 >
+                  {console.log(item)}
                   <Carta 
                     post_id={item.postid} 
                     cloth={item.front_image} 

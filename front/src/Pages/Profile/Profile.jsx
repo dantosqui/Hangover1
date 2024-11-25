@@ -201,7 +201,7 @@ const Profile = () => {
       
       <div className="profile-headers">
 
-        <div className="profile-picture-and-name"> {/*foto de perfil y nombre */}
+        <div className="profile-picture-and-name profile-backgorund"> {/*foto de perfil y nombre */}
           <div className="picture">
           <img
             src={userData.user_data.profile_photo}
@@ -215,8 +215,7 @@ const Profile = () => {
             </div>
         </div>
       
-      </div>
-      <div className="profile-description"> {/* descripcion */}
+      <div className="profile-description profile-backgorund"> {/* descripcion */}
           {editing ? (
             <>
               <input
@@ -306,9 +305,9 @@ const Profile = () => {
               }} />
             </>
           ) : (
-            <>
+            <div className="desc">
             <p>{userData.user_data.description}</p>
-            </>
+            </div>
           )}
         <div className="profile-actions"> {/*seguir etc */}
           {isOwnProfile ? (
@@ -346,8 +345,9 @@ const Profile = () => {
           )}
         </div>
           </div>
+      </div>
 
-          <div className="profile-stats"> {/* numeritos */}
+          <div className="profile-stats profile-backgorund"> {/* numeritos */}
             <span>{userData.user_data.post_number} Prendas</span>
             <span>{userData.user_data.follower_number} Seguidores</span>
             <span>{userData.user_data.followed_number} Seguidos</span>

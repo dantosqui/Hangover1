@@ -23,10 +23,10 @@ router.post("/save", AuthMiddleware, async (req, res) => {
     console.log("golaa")
     const user = req.user.id;
     const desingId = req.body.designId;
-    const images = req.body.images;
+    const image = req.body.image;
     const data = req.body.designData;
     
-    const saved = await designService.save(user, desingId, images ,data);
+    const saved = await designService.save(user, desingId, image,data);
     console.log(saved);
     if(saved === false){
         return res.status(401).send();
