@@ -1,11 +1,17 @@
 import axios from 'axios';
 import config from "../../config.js";
 import React, { useState, useEffect } from 'react';
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react"
 
 const Carrito = () => {
     const [carritoStuff, setCarritoStuff] = useState([]);
     const [error, setError] = useState(null);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [preferenceId, setPreferenceId] = useState(null);
+
+    initMercadoPago("APP_USR-4dccab7e-c2b9-4aa0-9d07-facc29975cb0", {
+        locale: "es-AR",
+    });
 
     useEffect(() => {
         const loadCarrito = async () => {
@@ -48,25 +54,27 @@ const Carrito = () => {
         locale: "es-AR",
     });*/
 
-    const handleCheckout = async (totalAmount) => {
+    const handleCheckout = async () => {
+        
         try{
         
-            const orderData = {
-                title: "YO",
-                total_price: totalAmount
-            };
 
             const response = await axios.post(`${config.url}payment/create_preference`, { 
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(orderData),
+                title: "YO",
+                quantity: 1,
+                price: totalAmount
+            },
+            {
+              headers: {
+                "Content-Type": "application/json", // Define el tipo de contenido como JSON
+              },
             });
 
-            const preference = await response.json();
-            createCheckoutButton(preference.id);
+            const { id } = response.data;
+            console.log(id);
+            return id;
         } catch (error){
-            alert("error :(");
+            console.log(error);
         }
         /*try {
             const res = await axios.post(`${config.url}payment/create-order`);
@@ -77,8 +85,11 @@ const Carrito = () => {
         }*/
     };
 
-    const createCheckoutButton = () => {
-        
+    const handleBuy = async () => {
+        const id = await handleCheckout();
+        if(id){
+            setPreferenceId(id);
+        }
     }
 
     return (
@@ -98,8 +109,8 @@ const Carrito = () => {
                 </div>
             ))}
             <h3>Precio total del carrito: {totalAmount}</h3>
-            <button id="checkout" onClick={handleCheckout(totalAmount)}>Pay</button>
-            <div id="wallet_container"></div>
+            <button onClick={handleBuy}>Pay</button>
+            {preferenceId && <Wallet initialization={{ preferenceId: preferenceId }} />}
         </>
     );
 };

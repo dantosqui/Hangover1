@@ -1,22 +1,24 @@
 import express from "express";
 
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
+const client = new MercadoPagoConfig({ accessToken: 'APP_USR-5698974043614735-112507-c763e9987f50b5e35d795bbfba52b030-2115173863' });
 
 const router = express.Router();
 
-router.post("/create-oreference", async (req, res) => {
+router.post("/create_preference", async (req, res) => {
+  
   try{
     const body = {
       items: [{
         title: req.body.title,
-        total_price: Number(req.body.total_price),
+        quantity: Number(req.body.quantity),
+        unit_price: Number(req.body.price),
         currency_id: "ARS",
       }],
       back_urls: {
-        success: "",
-        failure:"",
-        pending: ""
+        success: "https://www.youtube.com/watch?v=-VD-l5BQsuE",
+        failure:"https://www.youtube.com/watch?v=-VD-l5BQsuE",
+        pending: "https://www.youtube.com/watch?v=-VD-l5BQsuE"
       },
       auto_return: "approved",
     };
@@ -26,8 +28,10 @@ router.post("/create-oreference", async (req, res) => {
     res.json({
       id: result.id,
     });
+
   }catch (error){
     console.log(error);
+    console.log("#olaaa");
     res.status(500).json({
       error: "Error al crear la preferencia :(",
     });
