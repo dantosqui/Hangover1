@@ -130,7 +130,7 @@ router.put("/profile/simple/:id", AuthMiddleware, async (req, res) => {
     const userId = req.params.id;
     const newData = req.body;
 
-    console.log(newData.profileImage, "aaaaaaaaa");
+    //console.log(newData.profileImage, "aaaaaaaaa");
     const updateProfileResult = await userService.updateProfile(newData, userId);
 
     if (updateProfileResult === 1) {
@@ -139,7 +139,6 @@ router.put("/profile/simple/:id", AuthMiddleware, async (req, res) => {
         return res.status(500).json({ message: "Error al actualizar el perfil." });
     }
 });
-
 
 router.post("/follow/:id",AuthMiddleware,async (req,res) => {
     if (req.user == null){

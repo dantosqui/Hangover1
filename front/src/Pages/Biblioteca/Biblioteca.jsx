@@ -4,6 +4,7 @@ import './Biblioteca.css';
 import axios from 'axios';
 import config from '../../config.js';
 import Carta from '../../components/Carta/carta.jsx';
+import CartaSimple from '../../components/CartaSimple/cartaSimple.jsx';
 import { Link } from 'react-router-dom';
 import likedIcon from '../../vendor/imgs/heart.svg'
 import savedIcon from '../../vendor/imgs/bookmark.svg'
@@ -17,14 +18,14 @@ const LibraryPage = () => {
   const [activeFilter, setActiveFilter] = useState('liked'); 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const {strictCheckAuth} = useContext(AuthContext)
-  
+  const {strictCheckAuth, fetchUserInfo} = useContext(AuthContext)
+  const [userInfo,setUserInfo] = useState();
 
   useEffect(() => {
     //let authcheck;const checkauth = async () => {return strictCheckAuth(navigate)};checkauth()
     
     //if (authcheck) { //do everything else
-    
+    let usInfo;
     const fetchItems = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -53,6 +54,7 @@ const LibraryPage = () => {
       }
     };
     fetchItems();
+    {console.log("userInfo") ; console.log(userInfo)}
     }
   //}
   , []);
@@ -102,63 +104,68 @@ const LibraryPage = () => {
             <h2 className='libraryTitle'>Mi biblioteca</h2>
             <div className='filtericons'>
               <div onClick={setItemsBorradores} className={`filter-container ${activeFilter === 'borradores' ? 'active' : ''}`}>
-                  
                   <img className="iconLibrary" src={designIcon} alt="ss" />
-                
               </div>
               <div onClick={setItemsGuardados} className={`filter-container ${activeFilter === 'saved' ? 'active' : ''}`}>
-                
                   <img className="iconLibrary" src={savedIcon} alt="ss" />
-                
               </div>
               <div onClick={setItemsLikeados} className={`filter-container ${activeFilter === 'liked' ? 'active' : ''}`}>
-              
                   <img className="iconLibrary" src={likedIcon} alt="ss" />
-               
               </div>
             </div>
           </div>
         </div>
         <div className="cuadrado">
-  <div className="library-grid" key={activeTab}>
-    {activeFilter !== 'borradores' ? (
-      displayedItems.map((item, index) => (
-        <div 
-          key={`${activeTab}-${item.postid}-${index}`} 
-          className="library-item" 
-          onClick={() => handleViewDesign(item.postid)}
-        >
-          
-          <Carta 
-            className={`clickable cardGroup${index}`} 
-            post_id={item.postid} 
-            cloth={item.front_image} 
-            profile_photo={item.profile_photo}
-            username={item.username}    
-            user_id={item.creator_id}
-            onClickFunction={() => handleViewDesign(item.postid)}
-            putLike={false} // Ajusta esto según sea necesario
-          />
-          
-        </div>
-      ))
-    ) : (
-      displayedItems.map((item, index) => (
-        <div className="designItemWrapper">
-        <Link to="/designer" state={{ designId: item.id }}>
-            <div key={`${item.image}-${index}`} className="library-item">
-              <img src={item.image} alt={`Draft ${index}`} />
-            </div>
-          </Link>
-          <Link to={'/NewPost/'+item.id}>publicar</Link>
+          <div className="library-grid" key={activeTab}>
+            {displayedItems.length === 0 ? (
+              <div className="empty-state-message">
+                {activeFilter === 'borradores' && (
+                  <p>No tienes borradores guardados todavía.</p>
+                )}
+                {activeFilter === 'saved' && (
+                  <p>No tienes diseños guardados todavía.</p>
+                )}
+                {activeFilter === 'liked' && (
+                  <p>No tienes diseños que te gusten todavía.</p>
+                )}
+              </div>
+            ) : activeFilter !== 'borradores' ? (
+              displayedItems.map((item, index) => (
+                <div 
+                  key={`${activeTab}-${item.postid}-${index}`} 
+                  className="library-item" 
+                  onClick={() => handleViewDesign(item.postid)}
+                >
+                  <Carta 
+                    post_id={item.postid} 
+                    cloth={item.front_image} 
+                    profile_photo={item.profile_photo}
+                    username={item.username}    
+                    user_id={item.creator_id}
+                    onClickFunction={() => handleViewDesign(item.postid)}
+                    putLike={false}
+                  />
+                </div>
+              ))
+            ) : (
+              displayedItems.map((item, index) => (
+                
+                <div className="designItemWrapper" key={`${item.image}-${index}`}>
+                  <Link to="/designer" state={{ designId: item.id }}>
+                     <CartaSimple 
+                    cloth={item.image} 
+                    profile_photo={userInfo.profile_photo}
+                  />
+                  </Link>
+                  <Link to={'/NewPost/'+item.id}>publicar</Link>
+                </div>
+              ))
+            )}
           </div>
-      ))
-    )}
-  </div>
-</div>
+        </div>
       </div>
     </div>
-  );
+  );  
 };
 
 export default LibraryPage;

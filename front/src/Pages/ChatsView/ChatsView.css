@@ -1,40 +1,37 @@
-.chat-view {
+ 
+
+.chat-view-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.chats-list-contain {
+    width: 300px;
+    border-right: 1px solid #ccc;
+    
+    overflow-y: auto;
+}
+
+.chat-container {
+    flex: 1;
     padding: 20px;
+    display: flex;
+    justify-content: center;
 }
 
-.chat-view ul {
-    list-style-type: none;
-    padding: 0;
+.selected {
+    background-color: rgba(56, 117, 109, 1);
+    color: white;
 }
 
-.chat-view li {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.chat-view a {
-    text-decoration: none;
-    color: #333;
-}
-
-.chat-view a:hover {
-    background-color: #e9e9e9;
-}
-
-.chat-view strong {
-    display: block;
-    font-size: 1.2em;
-}
-
+/* Existing styles */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -42,30 +39,65 @@
 }
 
 .modal-content {
-    background-color: white;
+    background: white;
     padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    max-width: 90%;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
 }
 
-button.removeFriend {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.selected-friend{
-    border: 1px solid black;
-    padding: 5px;
-    border-radius: 10px;
-}
-
-.selected-friends{
+.selected-friends {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.selected-friend {
+    background: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.friend {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.friend:hover {
+    background-color: #f0f0f0;
+}
+
+.chatCard{
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 2px solid black;
+    padding: 1vh 0px 1vh 0px;
+}
+.chatCard span{
+    opacity: 50%;
+}
+.chatList{
+    display: flex;
+    flex-direction: column;
+}
+
+.newChat{
+    width: 86% ;
+}
+
+.newChatButtonWrapper{
+    display: flex;
+    justify-content: center;
+}
+
+li{
+    margin: 0;
+}
+
+.chatWindow{
+    margin: 0;
 }

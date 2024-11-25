@@ -143,9 +143,9 @@ const Navbar = () => {
           <div className='userThingsDiv'>
           {isLoggedIn ? (
                 <>
-                {console.log(user)}
-                  {user ? <Link className='userThingsA' to={"/user/"+user.id}>{user.username}<img className='profPic' src={user.profile_photo}></img></Link> : null} 
-                  {/* yo le pondria que en lugar de decir el nombre de usuario mostrara su fotito */}
+                
+                  {user ? <Link className='userThingsA' to={"/user/"+user.id}>{user.username}<img className='profPic' src={user.profile_photo ? user.profile_photo : standardUser}></img></Link> : null} 
+                  
                  
                 </>
               ) : (

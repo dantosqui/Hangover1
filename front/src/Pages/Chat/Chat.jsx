@@ -8,9 +8,8 @@ import config from '../../config';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-  width: 40vw;
-  max-width: 1600px;
-  margin: 0 auto;
+  width: 55vw;
+  margin: 0;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -114,7 +113,8 @@ const DateDivider = styled.div`
 `;
 
 
-const Chat = () => {
+const Chat = ({ ownId, chatId }) => {
+  // Remover useParams y usar las props directamente
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
@@ -124,12 +124,9 @@ const Chat = () => {
   const socket = useRef(null);
   const messageInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
-  const { ownId, chatId } = useParams();
   const realOwnToken = localStorage.getItem("token");
   const users = [+ownId, +chatId];
-  const usersShowing = useState([]);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
   const lastMessageRef = useRef(null);
   const [chatName, setChatName] = useState("");
   const [chatMembers, setChatMembers] = useState([]);
@@ -142,47 +139,53 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    if (socket.current) {
+        socket.current.disconnect();
+    }
+
     socket.current = io(config.url, {
-      query: { token: realOwnToken }
+        query: { token: realOwnToken }
     });
+    
     socket.current.emit('set users', { users });
 
     socket.current.on('error', (error) => {
-      console.error('Error del servidor:', error.message);
-      setError(error.message);
-      socket.current.disconnect();
-      navigate('/');
+        console.error('Error del servidor:', error.message);
+        setError(error.message);
+        socket.current.disconnect();
     });
 
     socket.current.on('chat message', (content, id, sender_user, date_sent) => {
-      const message = {
-        content,
-        id,
-        sender_user,
-        date_sent,
-      };
-      setMessages((prevMessages) => [...prevMessages, message]);
+        const message = {
+            content,
+            id,
+            sender_user,
+            date_sent,
+        };
+        setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     socket.current.on('load messages', (info, loadedMessages, hasMoreMessages) => {
-      setMessages((prevMessages) => {
-        const newMessages = [...loadedMessages, ...prevMessages];
-        return newMessages.filter((message, index, self) =>
-          index === self.findIndex((t) => t.id === message.id)
-        );
-      });
-      setChatName(info.chatName);
-      setChatMembers(info.userList);
-      setHasMore(hasMoreMessages);
-      setIsLoading(false);
+        setMessages((prevMessages) => {
+            const newMessages = [...loadedMessages, ...prevMessages];
+            return newMessages.filter((message, index, self) =>
+                index === self.findIndex((t) => t.id === message.id)
+            );
+        });
+        setChatName(info.chatName);
+        setChatMembers(info.userList);
+        setHasMore(hasMoreMessages);
+        setIsLoading(false);
     });
 
-    loadMessages(page);
+    loadMessages(1);
+    setPage(1);
+    setMessages([]);
 
     return () => {
-      socket.current.disconnect();
+        socket.current.disconnect();
     };
-  }, []);
+}, [chatId]);
 
   useEffect(() => {
     const handleScroll = () => {

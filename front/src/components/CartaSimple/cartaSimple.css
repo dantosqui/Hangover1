@@ -87,28 +87,4 @@
     gap: 1vw;
     z-index: 2;
   }
-  .card {
-    flex: 1 1 250px; /* El ancho mínimo de cada carta es 250px */
-    max-width: 300px; /* El ancho máximo de cada carta es 300px */
-    box-sizing: border-box;
-    margin-bottom: 20px; /* Espacio entre las filas */
-    display: flex
-;
-    flex-direction: column;
-    align-items: center;
-    width: 240px;
-    padding: 2rem 0.5rem;
-    margin: 15px 1px;
-    text-align: center;
-    position: relative;
-    border-radius: 2.6rem;
-    background-color: #ffffff;
-    border: 3.0px solid rgba(56, 117, 109);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  }
   
-  a {
-    text-decoration: none;
-    color: inherit;
-}

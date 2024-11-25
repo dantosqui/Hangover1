@@ -228,13 +228,12 @@ export class UserRepository {
 
     async updateProfile(data, id) {
         console.log("hola soy tu consciencia..")//entra
-        const query = "UPDATE users SET first_name = $1, last_name = $2, username = $3, description = $4, profile_photo = $5 WHERE id = $6 RETURNING *";
+        const query = "UPDATE users SET first_name = $1, last_name = $2, username = $3, description = $4 WHERE id = $5 RETURNING *";
         const values = [
             data.first_name,
             data.last_name,
             data.username,
             data.description,
-            data.profileImage || null,  // Si no hay imagen, dejamos null
             id 
         ];
         console.log("values: " + values) 

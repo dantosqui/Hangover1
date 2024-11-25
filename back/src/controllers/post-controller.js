@@ -105,6 +105,7 @@ router.post("/", AuthMiddleware, async (req, res) => {
 
     const inserted = await postService.InsertPost(post);
     if (inserted) {
+        
         return res.status(201).send();
     } else {
         return res.status(400).send();

@@ -126,24 +126,22 @@ class ChatRepository {
 
     async getRecentChats(userId) {
         const query = `
-            SELECT 
-                chats.id, 
-                chats.name, 
-                MAX(messages.date_sent) AS last_message_time, 
-                users.username AS username
-            FROM chats
-            JOIN chat_members ON chats.id = chat_members.chat_id
-            LEFT JOIN messages ON chats.id = messages.chat_id
-            INNER JOIN users ON users.id = chat_members.user_id
-            WHERE chats.id IN (
-                SELECT chat_members.chat_id
-                FROM chat_members
-                WHERE chat_members.user_id = $1
-            ) 
-            AND users.id != $1  -- Excluir el usuario actual del resultado
-            GROUP BY chats.id, chats.name, users.username
-            ORDER BY last_message_time DESC
-            LIMIT 10;
+        SELECT 
+        chats.id,
+        chats.name,
+        MAX(messages.date_sent) AS last_message_time
+    FROM chats
+    JOIN chat_members ON chats.id = chat_members.chat_id
+    LEFT JOIN messages ON chats.id = messages.chat_id
+    WHERE chats.id IN (
+        SELECT chat_members.chat_id
+        FROM chat_members
+        WHERE chat_members.user_id = $1
+    )
+    GROUP BY chats.id, chats.name
+    ORDER BY last_message_time DESC
+    LIMIT 10;
+    
         `;
         const values = [userId];
         const result = await this.DBClient.query(query, values);

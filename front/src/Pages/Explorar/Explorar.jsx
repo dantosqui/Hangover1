@@ -15,35 +15,42 @@ const Explorar = () => {
 
   const fetchPosts = useCallback(async () => {
     if (!hasMore || loading) return;
+    
     setLoading(true);
+    
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${config.url}post`, {
         params: { limit: 10, page },
         headers: { Authorization: `Bearer ${token}` },
       });
-      const newPosts = response.data.collection.filter(
-        (newPost) => !posts.some((existingPost) => existingPost.id === newPost.id)
-      );
-      setPosts((prevPosts) => [...prevPosts, ...newPosts]);
+      
+      setPosts(prevPosts => {
+        const newPosts = response.data.collection.filter(
+          (newPost) => !prevPosts.some((existingPost) => existingPost.id === newPost.id)
+        );
+        return [...prevPosts, ...newPosts];
+      });
+      
       setHasMore(response.data.pagination.nextPage !== false);
-      setPage((prevPage) => prevPage + 1);
+      setPage(prevPage => prevPage + 1);
     } catch (error) {
       setError("Error fetching posts");
       console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
-  }, [hasMore, loading, page, posts]);
+  }, [hasMore, loading, page]); // Removed posts from dependencies
 
   useEffect(() => {
     fetchPosts();
-  }, []); // Remove fetchPosts and page from the dependency array
+  }, []); // Solo se ejecuta al montar el componente
 
   const lastPostElementRef = useCallback(
     (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
+      
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           fetchPosts();
@@ -52,6 +59,7 @@ const Explorar = () => {
         rootMargin: '100px',
         threshold: 0.1,
       });
+      
       if (node) observer.current.observe(node);
     },
     [loading, hasMore, fetchPosts]
@@ -71,8 +79,6 @@ const Explorar = () => {
             ref={index === posts.length - 1 ? lastPostElementRef : null}
           >
             <Carta
-              putLike={true}
-              className="card"
               post_id={post.id}
               profile_photo={post.post.creator_user.profile_photo}
               username={post.post.creator_user.username}

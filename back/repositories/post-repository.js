@@ -232,6 +232,7 @@ export class PostRepository {
             
             console.log(values)
             const result = await this.DBClient.query(query, values);
+            
             return result.rows[0].id;  // Devuelve el ID del post insertado
         } catch (error) {
             console.error('Error al crear post:', error);

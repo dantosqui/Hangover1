@@ -21,12 +21,14 @@ const Profile = () => {
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false); //g
+  const [previewImage, setPreviewImage] = useState(null);//g
   const [formData, setFormData] = useState({
     first_name: "",
     last_name:"",
     username: "",
     description: "",
-    profileImage: "",
+    profile_photo: "",
   });
 
   useEffect(() => {
@@ -73,6 +75,7 @@ const Profile = () => {
           last_name:response.data.user_data.last_name,
           username: response.data.user_data.username,
           description: response.data.user_data.description,
+          profileImage: response.data.user_data.profileImage ////
         });
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -88,40 +91,88 @@ const Profile = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleImageChange = (e) => {
-    
-    const file = e.target.files[0]; 
-    console.log(file)
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
+      try {
+        setUploadingImage(true);
+        
+        // Crear preview de la imagen
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setPreviewImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+
+        // Preparar el FormData para la subida
+        const imageFormData = new FormData();
+        imageFormData.append('image', file);
+
+        // Subir la imagen
+        const token = localStorage.getItem("token");
+        const response = await axios.post(
+          console.log("post post post post post post post post post post ")
+          `${config.url}vendor/upload`,
+          imageFormData,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        );
+        console.log("get get get get get get get get")
+
+
+        // Actualizar el formData con la ruta local de la imagen
         setFormData({
           ...formData,
-          profileImage: e.target.result, 
+          profile_photo: `/src/vendor/imgs/${response.data.filename}`
         });
-      };
-      reader.readAsDataURL(file); 
+
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Error al subir la imagen. Por favor, intenta de nuevo.");
+      } finally {
+        setUploadingImage(false);
+      }
     }
   };
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
+      
+      // Crear una copia del formData para enviar
+      const dataToSend = {
+        ...formData,
+        // Asegurarnos de que la ruta de la imagen sea relativa
+        profile_photo: formData.profile_photo.startsWith('/src') 
+          ? formData.profile_photo 
+          : userData.user_data.profile_photo
+      };
+
       await axios.put(
         `${config.url}user/profile/simple/${userId}`,
-        formData,
+        dataToSend,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      // Refresh the user data after saving
+      
+      // Actualizar los datos del usuario después de guardar
       setUserData({
         ...userData,
-        user_data: { ...userData.user_data, ...formData },
+        user_data: { 
+          ...userData.user_data, 
+          ...dataToSend
+        },
       });
-      setEditing(false); // Exit editing mode
+      setEditing(false);
+      setPreviewImage(null);
     } catch (error) {
       console.error("Error saving user data", error);
+      alert("Error al guardar los cambios. Por favor, intenta de nuevo.");
     }
   };
 
@@ -195,7 +246,7 @@ const Profile = () => {
                   }}
                 >
                   <img
-                    src={formData.profileImage || userData.user_data.profile_photo}
+                    src={previewImage || formData.profile_photo || userData.user_data.profile_photo}
                     alt="Imagen de perfil"
                     className="profile-img"
                     style={{
@@ -223,7 +274,7 @@ const Profile = () => {
                       }
                     }}
                   >
-                    Cambiar imagen
+                    {uploadingImage ? 'Subiendo...' : 'Cambiar imagen'}
                   </div>
                 </label>
                 <input
@@ -232,10 +283,14 @@ const Profile = () => {
                   accept="image/*"
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
+                  disabled={uploadingImage}
                 />
               </div>
-              <Button text="Guardar" onClick={handleSave} />
-              <Button text="Cancelar" onClick={() => setEditing(false)} />
+              <Button text="Guardar" onClick={handleSave} disabled={uploadingImage} />
+              <Button text="Cancelar" onClick={() => {
+                setEditing(false);
+                setPreviewImage(null);
+              }} />
             </>
           ) : (
             <>
