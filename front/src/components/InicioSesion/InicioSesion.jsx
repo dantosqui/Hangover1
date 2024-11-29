@@ -30,7 +30,7 @@ const InicioSesion = ({ closeModal }) => {
       if (response.data.success) {
 
         localStorage.setItem("token",response.data.token);
-        console.log(localStorage.getItem("token"))
+        
         closePopup()
         window.location.reload(); 
       } else {

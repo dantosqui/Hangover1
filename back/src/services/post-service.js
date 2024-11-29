@@ -16,7 +16,7 @@ async IsLiked(filters){
 
 async SearchPosts(query, limit, page){
     const results = await this.bd.SearchPosts(query, limit, page);
-    console.log("aa",results.pagination.nextPage);
+    
     return results;
 }
 
@@ -82,9 +82,9 @@ async InsertPost(post){
     }
 
     async canComment(postId){
-        console.log(postId);
+        
         const val = await this.bd.puedeComentar(postId)
-        console.log("puede comentar?: " + val)
+        
         return val;
     }
     

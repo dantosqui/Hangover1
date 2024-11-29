@@ -55,8 +55,8 @@ const LibraryPage = () => {
         // Crear Set de IDs de diseños publicados
         let publishedIds = new Set();
         if (postsResponse.data && Array.isArray(postsResponse.data.collection)) {
-          console.log('Posts collection:', postsResponse.data.collection); // Debug log
-          console.log(postsResponse.data.collection)
+          
+          
           setTotalDesigns(postsResponse.data.collection)
           // Extraer los IDs directamente de la collection
           publishedIds = new Set(
@@ -64,7 +64,7 @@ const LibraryPage = () => {
           );
         
           
-          console.log(totalDesigns); // Debug log
+         
         }
         setPublishedDesigns(publishedIds);
 
@@ -188,7 +188,7 @@ const LibraryPage = () => {
                   className="library-item" 
                   onClick={() => handleViewDesign(item.postid)}
                 >
-                  {console.log(item)}
+                  
                   <Carta 
                     post_id={item.postid} 
                     cloth={item.front_image} 
@@ -204,7 +204,7 @@ const LibraryPage = () => {
               displayedItems.map((item, index) => (
                 <div className="designItemWrapper" key={`${item.image}-${index}`}>
                   <Link to="/designer" state={{ designId: item.id }}>
-                    {console.log(publishedDesigns)}
+                    
                     <CartaSimple 
                       cloth={item.image} 
                       profile_photo={userInfo[0]?.profile_photo || '/ruta/a/tu/imagen/default.png'}

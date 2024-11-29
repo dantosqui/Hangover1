@@ -102,7 +102,7 @@ export class PostRepository {
     async SearchPosts(query, limit, page) {
         const searchQuery = `%${query}%`;
         const offset = (page - 1);
-        console.log("page",page)
+        
         const sql = `
         SELECT 
         p.id AS post_id,
@@ -163,7 +163,7 @@ export class PostRepository {
             `;
             const countResult = await this.DBClient.query(countQuery, [searchQuery]);
             const total = countResult.rows[0].total;
-            console.log("total", total, "--", "page", page);
+            
             return Pagination.BuildPagination(result.rows, limit, page, total);
         } catch (error) {
             console.error("Error fetching search results:", error);
@@ -230,7 +230,7 @@ export class PostRepository {
                 post.design_id
             ];
             
-            console.log(values)
+            
             const result = await this.DBClient.query(query, values);
             
             return result.rows[0].id;  // Devuelve el ID del post insertado
@@ -382,7 +382,7 @@ return likes.rowCount>0;
       async puedeComentar(postId){
         const query = "SELECT allow_comments FROM posts WHERE id = $1"
         const result = await this.DBClient.query(query, [postId]);
-        console.log("este es el result: "+ result.rows[0].allow_comments)
+        
         return result.rows[0].allow_comments;
       }
 

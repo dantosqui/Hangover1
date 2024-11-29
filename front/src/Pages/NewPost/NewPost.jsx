@@ -14,16 +14,14 @@ const NewPost = () => {
     const [remixable, setRemixable] = useState(false);
     const [visibility, setVisibility] = useState('public');
 
-    useEffect(() => {
-        console.log(visibility);
-    }, [visibility]);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             const token = localStorage.getItem("token");
-            console.log(visibility);
+            
 
             const response = await axios.post(
                 `${config.url}post/`,
@@ -41,8 +39,8 @@ const NewPost = () => {
             );
 
             if (response.status === 201) {
-                console.log("Post created successfully!");
-                console.log(title)
+                //console.log("Post created successfully!");
+                
                 window.location.href = '/'; // southside
             } else {
                 setErrorMessage("Failed to create post");

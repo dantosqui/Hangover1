@@ -24,7 +24,7 @@ export class UserRepository {
             }
         }
         catch(e){
-            console.log(e);
+            console.error(e);
             return [false, "", 500];
         }
     }
@@ -49,7 +49,7 @@ export class UserRepository {
             return [false, 400, "El nombre de usuarios ya existe"];
         }
         catch(e){
-            console.log("error validadndo registro",e);
+            console.error("error validadndo registro",e);
         }
     }
 
@@ -61,7 +61,7 @@ export class UserRepository {
             return user.rows;
         }
         catch(e){
-            console.log(e);
+            console.error(e);
         }
     }
     
@@ -284,7 +284,7 @@ export class UserRepository {
     }
 
     async updateProfile(data, id) {
-        console.log("data: ", data)
+        
         const query = "UPDATE users SET first_name = $1, last_name = $2, username = $3, description = $4, profile_photo=$5 WHERE id = $6 RETURNING *";
         const values = [
             data.first_name,
@@ -294,7 +294,7 @@ export class UserRepository {
             data.profile_photo,
             id 
         ];
-        console.log("values: " + values) 
+        
 
         try {
             const result = await this.DBClient.query(query, values);

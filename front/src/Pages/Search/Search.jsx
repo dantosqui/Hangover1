@@ -19,7 +19,7 @@ const Search = () => {
     if (!hasMore || loading) return;
     setLoading(true);
     try {
-      console.log("fetchResults called", reset, pageNum);
+      
       const response = await axios.get(`${config.url}post/search/${search}`, {
         params: { limit: 10, page: pageNum },
       });

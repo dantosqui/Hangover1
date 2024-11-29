@@ -119,7 +119,7 @@ const PostDetail = () => {
 
   const newComment = async () => {
     if (!commentsAllowed) {
-      console.log("Los comentarios están desactivados para este post.");
+      //console.log("Los comentarios están desactivados para este post.");
       return;
     }
 
@@ -176,7 +176,7 @@ const PostDetail = () => {
           },
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(response.data)
+        
         const { post, comments, liked, saved, canComment } = response.data;
         setSaved(saved);
         setPost(post[0]);
@@ -202,7 +202,7 @@ const PostDetail = () => {
   }, [loading, error]);
 
 
-  if (loading) return <div>Instalando virus...</div>;
+  if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!post) return <div>No post found</div>;
 
@@ -226,7 +226,7 @@ const PostDetail = () => {
           }
         );
         if (response.status === 201) {
-          console.log("Post liked successfully!");
+          
           setIsChecked(true);
         } else {
           console.error("Failed to like the post");
@@ -250,7 +250,7 @@ const PostDetail = () => {
           }
         );
         if (response.status === 200) {
-          console.log("Post disliked successfully!");
+          //console.log("Post disliked successfully!");
           setIsChecked(false);
         } else {
           console.error("Failed to dislike the post");

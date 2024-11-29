@@ -31,7 +31,7 @@ const validateUserFields = [
 
 router.post("/register", validateUserFields, async (req,res)=>{
     const errors = validationResult(req);
-    console.log("errores regsiter", errors)
+    
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array(), message: "campos no son correctos" });
     }
@@ -48,7 +48,7 @@ router.post("/register", validateUserFields, async (req,res)=>{
         req.body.profile_photo,
         req.body.role_id
     );
-    console.log("usuario: " + user.username)
+    
 
     if (!checkBirthDate(user)) 
        { return res.status(400).json({message:"Debe ser mayor de 13 años"}); }
@@ -130,7 +130,7 @@ router.put("/profile/simple/:id", AuthMiddleware, async (req, res) => {
     const userId = req.params.id;
     const newData = req.body;
 
-    //console.log(newData.profileImage, "aaaaaaaaa");
+    
     const updateProfileResult = await userService.updateProfile(newData, userId);
 
     if (updateProfileResult === 1) {
@@ -159,7 +159,7 @@ router.get("/carrito", AuthMiddleware, async(req,res) => {
     const user = req.user;
     if(user !== null){
         const carrito = await userService.getCarrito(user.id);
-        console.log(carrito);
+        
         return res.status(200).json(carrito);
     }else{
         return res.status(401).send();

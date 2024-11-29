@@ -17,7 +17,7 @@ export class DesignRepository {
         const values = [userId, designId];
         
         const design = (await this.DBClient.query(sql, values)).rows[0];
-        console.log(design);
+        
         if(design){
             return JSON.stringify(design);
         }
@@ -42,7 +42,7 @@ export class DesignRepository {
         
         
         const saved = await this.DBClient.query(sql, values);
-        console.log(saved.rows.length > 0);  // Esto imprimirá las filas retornadas
+          // Esto imprimirá las filas retornadas
         return saved.rows[0].id;
     }
 }

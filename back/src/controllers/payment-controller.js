@@ -30,8 +30,8 @@ router.post("/create_preference", async (req, res) => {
     });
 
   }catch (error){
-    console.log(error);
-    console.log("#olaaa");
+    console.error(error);
+    
     res.status(500).json({
       error: "Error al crear la preferencia :(",
     });

@@ -99,7 +99,6 @@ class ChatRepository {
                 info.chatName = result.rows[0].name; // Nombre del chat
                 info.userList = result.rows.map(row => row.username); // Lista de usernames
             }
-            console.log(info);
             return {
                 info: info,
                 rows: messages.rows.reverse(),

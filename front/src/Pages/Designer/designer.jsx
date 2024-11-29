@@ -565,7 +565,7 @@ const Designer = () => {
     };
 
     const designJSON = JSON.stringify(designData);
-    console.log(designJSON);
+    
     const token = localStorage.getItem('token');
     try {
       const response = await axios.post(`${config.url}design/save`, { designId: designId, image: dataUrl, designData: designJSON }, {
@@ -754,7 +754,7 @@ const Designer = () => {
       
             <div key={selectedItem.id}>
               
-              {console.log(selectedItem)}
+              
               <p>{selectedItem.name}</p>
               <button className="designer-button" onClick={() => removeImage(selectedItem.id)}>Eliminar Imagen</button>
             </div>
@@ -895,7 +895,7 @@ const Designer = () => {
               width: '100%', 
               height: '100%', 
               color: text.color,
-              border: selectedItem && selectedItem.id === text.id ? '2px dashed #000' : 'none',
+              border: selectedItem && selectedItem.id === text.id ? '2px dashed rgba(56, 117, 109, 1)' : 'none',
               wordWrap: 'break-word', // Ensure text wraps within its container
               overflow: 'hidden', // Hide overflow text
               whiteSpace: 'pre-wrap', // Ensure text goes to a new line within its container
@@ -938,7 +938,7 @@ const Designer = () => {
             style={{ 
               width: '100%', 
               height: '100%',
-              border: selectedItem && selectedItem.id === shape.id ? '2px dashed #000' : 'none'
+              border: selectedItem && selectedItem.id === shape.id ? '2px dashed rgba(56, 117, 109, 1)' : 'none'
             }}
           />
         </Rnd>
@@ -977,7 +977,7 @@ const Designer = () => {
             style={{ 
               width: '100%', 
               height: '100%',
-              border: selectedItem && selectedItem.id === image.id ? '2px dashed #000' : 'none'
+              border: selectedItem && selectedItem.id === image.id ? '2px dashed rgba(56, 117, 109, 1)' : 'none'
             }}
           />
         </Rnd>

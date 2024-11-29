@@ -153,7 +153,7 @@ const Chat = ({ ownId, chatId }) => {
     if (isLoading) return;
     setIsLoading(true);
     socket.current.emit('load messages', { users: users[0], page: pageNumber, limit: 20 });
-    console.log("hola");
+    
   }, []);
 
   useEffect(() => {

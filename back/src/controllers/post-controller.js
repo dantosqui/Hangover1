@@ -101,7 +101,7 @@ router.post("/", AuthMiddleware, async (req, res) => {
         remixable: req.body.remixable,
         design_id: req.body.designId
     };
-    console.log(req.body)
+    
 
     const inserted = await postService.InsertPost(post);
     if (inserted) {

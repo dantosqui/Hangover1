@@ -28,7 +28,7 @@ export default function setupSocketServer(server) {
     socket.on('set users', async (data) => {
       const userId = data.users[0];
       const chatId = data.users[1];
-      console.log(userId);
+      
       if (socket.user === undefined) {
         socket.emit('error', { message: 'Sesion finalizada' });
         socket.disconnect();
@@ -56,7 +56,7 @@ export default function setupSocketServer(server) {
       });
 
       socket.on('load messages', async (data) => {
-        console.log("Holaaa");
+        
         const { page, limit } = data;
         try {
           const results = await chatService.loadMessages(chatId, page, limit);

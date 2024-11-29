@@ -9,7 +9,6 @@ router.get("/get/:id", AuthMiddleware, async (req, res) => {
     
     const user = req.user.id;
     const designId = req.params.id;
-    console.log("user",user,designId)
     const design = await designService.get(user, designId);
     if(design === false){
         return res.status(401).send();
@@ -20,14 +19,14 @@ router.get("/get/:id", AuthMiddleware, async (req, res) => {
 });
 
 router.post("/save", AuthMiddleware, async (req, res) => {
-    console.log("golaa")
+    
     const user = req.user.id;
     const desingId = req.body.designId;
     const image = req.body.image;
     const data = req.body.designData;
     
     const saved = await designService.save(user, desingId, image,data);
-    console.log(saved);
+    
     if(saved === false){
         return res.status(401).send();
     }else{
