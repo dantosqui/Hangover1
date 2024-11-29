@@ -13,7 +13,7 @@ import Carta from "../../components/Carta/carta.jsx";
 const Profile = () => {
   const { userId } = useParams();
   const [ownUserId, setOwnUserId] = useState(null);
-  const [userData, setUserData] = useState(null); // Initialize with null
+  const [userData, setUserData] = useState(null);
   const { isLoggedIn, openModalNavBar, strictCheckAuth, setIsLoggedIn } = useContext(AuthContext); 
   const [follows, setFollows] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
@@ -98,39 +98,37 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-
+      let updatedProfilePhoto = formData.profile_photo;
+  
       if (previewImage) {
         setUploadingImage(true);
-
+  
         const imageFormData = new FormData();
         const fileInput = document.getElementById('profile-image-input');
         const file = fileInput.files[0];
         imageFormData.append('image', file, file.name);
-
+  
         const response = await axios.post(
           `${config.url}vendor/upload`,
           imageFormData,
           {
             headers: {
               'Authorization': `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data'
-            }
+              'Content-Type': 'multipart/form-data',
+            },
           }
         );
-
-        setFormData({
-          ...formData,
-          profile_photo: `vendor/imgs/${response.data.filename}`
-        });
-
+  
+        // Update to use backend port and correct image path
+        updatedProfilePhoto = `http://localhost:3508/images/${response.data.filename}`;
         setUploadingImage(false);
       }
-
+  
       const dataToSend = {
         ...formData,
-        profile_photo: formData.profile_photo || userData.user_data.profile_photo
+        profile_photo: updatedProfilePhoto || userData.user_data.profile_photo,
       };
-
+  
       await axios.put(
         `${config.url}user/profile/simple/${userId}`,
         dataToSend,
@@ -138,14 +136,16 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      setUserData({
-        ...userData,
-        user_data: { 
-          ...userData.user_data, 
-          ...dataToSend
+  
+      setUserData((prevData) => ({
+        ...prevData,
+        user_data: {
+          ...prevData.user_data,
+          ...dataToSend,
         },
-      });
+      }));
+  
+      setFormData(dataToSend);
       setEditing(false);
       setPreviewImage(null);
     } catch (error) {

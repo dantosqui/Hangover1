@@ -22,14 +22,12 @@ const __dirname = path.dirname(__filename);
 // Configuración de Multer para el almacenamiento de imágenes
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Almacena las imágenes en hangover1/front/src/vendor/imgs
-    const uploadDir = path.join(__dirname, '..', 'front', 'src', 'vendor', 'imgs');
-    // Asegúrate de que el directorio existe
+    // Almacena las imágenes en el directorio public/images del backend
+    const uploadDir = path.join(__dirname, 'public', 'images');
     fs.mkdirSync(uploadDir, { recursive: true });
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    // Mantiene el nombre original del archivo pero añade timestamp para evitar duplicados
     const timestamp = Date.now();
     const extension = path.extname(file.originalname);
     const basename = path.basename(file.originalname, extension);
@@ -39,7 +37,6 @@ const storage = multer.diskStorage({
 
 // Configuración del filtro de archivos
 const fileFilter = (req, file, cb) => {
-  // Acepta solo imágenes
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
@@ -47,26 +44,23 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Inicializa multer con la configuración
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // Límite de 5MB
-  }
+  limits: { fileSize: 5 * 1024 * 1024 } // Límite de 5MB
 });
 
 const app = express();
 const server = http.createServer(app);
 
-// Configura las rutas para la API REST
+// Configuraciones de CORS y middleware
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
-// Servir archivos estáticos desde src/vendor
-app.use('/vendor', express.static(path.join(__dirname, '..', 'front', 'src', 'vendor', 'imgs')));
+
+// Servir archivos estáticos de imágenes
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // Middleware para manejar errores de multer
 app.use((err, req, res, next) => {
@@ -86,20 +80,13 @@ app.use((err, req, res, next) => {
 // Ruta para subir imágenes
 app.post('/vendor/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
-    console.log("No se ha proporcionado ningún archivo");
-    return res.status(400).json({ error: 'No se ha proporcionado ningún archivo' });
+    return res.status(400).json({ error: "No se ha proporcionado ningún archivo" });
   }
-  
-  console.log("Archivo subido:", req.file);
-  res.json({ 
-    success: true, 
-    filename: req.file.filename,
-    filepath: `vendor/imgs/${req.file.filename}`
-  });
-  console.log("---------------------------------------------------------------------")
-  console.log("Filename:", req.file.filename)
+  // Responde con el nombre del archivo subido
+  res.json({ filename: req.file.filename });
 });
 
+// Rutas de controladores (resto del código permanece igual)
 app.use("/post", PostsController);
 app.use("/user", UsersController);
 app.use("/design", DesignController);
