@@ -65,22 +65,79 @@ export class UserRepository {
         }
     }
     
-    async getSavedLikedPosts(userId){//NO SE OBTIENE LA FOTO DE PERFIL!!!! DEL CREADOR
-        try{
-            const queryLiked="SELECT posts.id as postId, posts.creator_id, posts.front_image, users.* FROM posts INNER JOIN liked on liked.post_id=posts.id inner join users on liked.user_id=users.id where liked.user_id=$1"
-            const querySaved="SELECT posts.id as postId, posts.creator_id, posts.front_image, users.* FROM posts INNER JOIN saved on saved.post_id=posts.id inner join users on saved.user_id=users.id where saved.user_id=$1"
-            const queryBorradores="SELECT id, last_edit, id_creator_user, parent_id, image FROM designs WHERE id_creator_user = $1";
-            const liked = await this.DBClient.query(queryLiked,[userId])
-            const saved = await this.DBClient.query(querySaved,[userId])
+       async getSavedLikedPosts(userId) {
+        try {
+            const queryLiked = `
+                SELECT 
+                    posts.id as postId, 
+                    posts.creator_id, 
+                    posts.front_image, 
+                    users.* 
+                FROM 
+                    posts 
+                INNER JOIN 
+                    liked 
+                ON 
+                    liked.post_id = posts.id 
+                INNER JOIN 
+                    users 
+                ON 
+                    posts.creator_id = users.id 
+                WHERE 
+                    liked.user_id = $1
+            `;
+            
+            const querySaved = `
+                SELECT 
+                    posts.id as postId, 
+                    posts.creator_id, 
+                    posts.front_image, 
+                    users.* 
+                FROM 
+                    posts 
+                INNER JOIN 
+                    saved 
+                ON 
+                    saved.post_id = posts.id 
+                INNER JOIN 
+                    users 
+                ON 
+                    posts.creator_id = users.id 
+                WHERE 
+                    saved.user_id = $1
+            `;
+            
+            const queryBorradores = `
+                SELECT 
+                    designs.id, 
+                    designs.last_edit, 
+                    designs.id_creator_user, 
+                    designs.parent_id, 
+                    designs.image, 
+                    users.* 
+                FROM 
+                    designs 
+                INNER JOIN 
+                    users 
+                ON 
+                    designs.id_creator_user = users.id 
+                WHERE 
+                    designs.id_creator_user = $1
+            `;
+            
+            const liked = await this.DBClient.query(queryLiked, [userId]);
+            const saved = await this.DBClient.query(querySaved, [userId]);
             const borradores = await this.DBClient.query(queryBorradores, [userId]);
-        
-
-            const posts = {liked:liked.rows,saved:saved.rows, borradores:borradores.rows}
-          
-            return posts
-        }
-        catch(e) {
-            console.error(e)
+    
+            const posts = {
+                liked: liked.rows,
+                saved: saved.rows,
+                borradores: borradores.rows
+            };
+    
+            return posts;
+        } catch (e) {
+            console.error(e);
         }
     }
 
@@ -227,20 +284,21 @@ export class UserRepository {
     }
 
     async updateProfile(data, id) {
-        console.log("hola soy tu consciencia..")//entra
-        const query = "UPDATE users SET first_name = $1, last_name = $2, username = $3, description = $4 WHERE id = $5 RETURNING *";
+        console.log("data: ", data)
+        const query = "UPDATE users SET first_name = $1, last_name = $2, username = $3, description = $4, profile_photo=$5 WHERE id = $6 RETURNING *";
         const values = [
             data.first_name,
             data.last_name,
             data.username,
             data.description,
+            data.profile_photo,
             id 
         ];
         console.log("values: " + values) 
 
         try {
             const result = await this.DBClient.query(query, values);
-            console.log(result. _prebuiltEmptyResultObject)
+            
             return 1; // Indica que la actualización fue exitosa
         } catch (error) {
             console.error("Error al actualizar el perfil:", error);

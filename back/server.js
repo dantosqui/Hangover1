@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
@@ -23,8 +22,8 @@ const __dirname = path.dirname(__filename);
 // Configuración de Multer para el almacenamiento de imágenes
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Almacena las imágenes en src/vendor/imgs
-    const uploadDir = path.join(__dirname, 'src', 'vendor', 'imgs');
+    // Almacena las imágenes en hangover1/front/src/vendor/imgs
+    const uploadDir = path.join(__dirname, '..', 'front', 'src', 'vendor', 'imgs');
     // Asegúrate de que el directorio existe
     fs.mkdirSync(uploadDir, { recursive: true });
     cb(null, uploadDir);
@@ -67,7 +66,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 // Servir archivos estáticos desde src/vendor
-app.use('/src/vendor', express.static(path.join(__dirname, 'src', 'vendor', 'imgs')));
+app.use('/vendor', express.static(path.join(__dirname, '..', 'front', 'src', 'vendor', 'imgs')));
 
 // Middleware para manejar errores de multer
 app.use((err, req, res, next) => {
@@ -86,18 +85,19 @@ app.use((err, req, res, next) => {
 
 // Ruta para subir imágenes
 app.post('/vendor/upload', upload.single('image'), (req, res) => {
-  console.log("post corrido")
   if (!req.file) {
+    console.log("No se ha proporcionado ningún archivo");
     return res.status(400).json({ error: 'No se ha proporcionado ningún archivo' });
   }
   
+  console.log("Archivo subido:", req.file);
   res.json({ 
     success: true, 
     filename: req.file.filename,
-    filepath: `/src/vendor/imgs/${req.file.filename}`
+    filepath: `vendor/imgs/${req.file.filename}`
   });
   console.log("---------------------------------------------------------------------")
-  console.log( "Filename:"+ req.file.filename)
+  console.log("Filename:", req.file.filename)
 });
 
 app.use("/post", PostsController);
@@ -114,53 +114,3 @@ const port = 3508;
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-/*import express from 'express';
-import cors from 'cors';
-import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-import PostsController from './src/controllers/post-controller.js';
-import UsersController from './src/controllers/user-controller.js';
-import DesignController from './src/controllers/design-controller.js';
-import ImageController from './src/controllers/image-controller.js';
-import PaymentController from './src/controllers/payment-controller.js';
-import PurchaseController from './src/controllers/purchase-controller.js';
-import ChatController from './src/controllers/chat-controller.js';
-
-import { AuthMiddleware } from './src/auth/authMiddleware.js';
-import setupSocketServer from './src/socket/socket.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const app = express();
-const server = http.createServer(app);
-
-// Configuración de CORS
-app.use(cors({ origin: 'http://localhost:3000' }));
-
-// Configuración de parsers
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-// Servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Rutas de la API
-app.use("/post", PostsController);
-app.use("/user", UsersController);
-app.use("/design", DesignController);
-app.use("/image", ImageController);
-app.use("/payment", PaymentController);
-app.use("/purchase", PurchaseController);
-app.use("/chat", ChatController);
-
-// Configuración de Socket.io
-const io = setupSocketServer(server);
-
-const port = 3508;
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});*/

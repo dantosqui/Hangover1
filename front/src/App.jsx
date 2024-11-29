@@ -44,7 +44,7 @@ function App() {
                      <Route exact path=":search" element={<Search/>}/> 
                 </Route>
                 <Route exact path="privateChat/:ownId/:chatId" element={<Chat/>}></Route>
-                <Route exact path="/carrito" element={<Carrito/>}></Route>
+                {/* <Route exact path="/carrito" element={<Carrito/>}></Route> */}
                 <Route exact path="/chatsview" element={<ChatsView/>}></Route>
                 <Route exact path="/newPost/:designId" element={<NewPost/>} />
                 

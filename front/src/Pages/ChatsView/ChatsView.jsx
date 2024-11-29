@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './ChatsView.css';
+import { useLocation } from 'react-router-dom';
 import config from '../../config';
 import Button from '../../components/Button/Button';
 import Chat from '../Chat/Chat';
@@ -17,6 +18,7 @@ const ChatView = () => {
     const [selectedChatId, setSelectedChatId] = useState(null);
 
     const groupNameRef = useRef();
+    const location = useLocation();
 
     const fetchRecentChats = async () => {
         try {
@@ -36,6 +38,7 @@ const ChatView = () => {
 
     useEffect(() => {
         fetchRecentChats();
+        setSelectedChatId(location.search.split('=')[1]);
     }, []);
 
     const openModal = async () => {

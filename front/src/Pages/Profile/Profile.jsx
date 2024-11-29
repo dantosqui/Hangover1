@@ -10,58 +10,53 @@ import { useNavigate } from "react-router-dom";
 import { guardarHandler, eliminarGuardadoHandler, followHandler, unFollowHandler } from "../../universalhandlers.js";
 import Carta from "../../components/Carta/carta.jsx";
 
-
 const Profile = () => {
   const { userId } = useParams();
   const [ownUserId, setOwnUserId] = useState(null);
   const [userData, setUserData] = useState(null); // Initialize with null
-  const { isLoggedIn, openModalNavBar,strictCheckAuth, setIsLoggedIn } = useContext(AuthContext); 
+  const { isLoggedIn, openModalNavBar, strictCheckAuth, setIsLoggedIn } = useContext(AuthContext); 
   const [follows, setFollows] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [uploadingImage, setUploadingImage] = useState(false); //g
-  const [previewImage, setPreviewImage] = useState(null);//g
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
   const [formData, setFormData] = useState({
     first_name: "",
-    last_name:"",
+    last_name: "",
     username: "",
     description: "",
     profile_photo: "",
   });
 
   useEffect(() => {
-    let authcheck;const checkauth = async () => {return strictCheckAuth(navigate)};checkauth()
-    
-  },[])
-  
+    const checkauth = async () => {
+      return strictCheckAuth(navigate);
+    };
+    checkauth();
+  }, []);
+
   const LogOut = () => {
     localStorage.setItem('token', '');
-    setUser(null);
-    setIsLoggedIn(false); // Actualizar estado de inicio de sesión en el contexto
-    window.location.reload(); // Recargar la página para limpiar el estado
+    setIsLoggedIn(false);
+    window.location.reload();
   };
-  useEffect(() => {
-    
 
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token2 = localStorage.getItem("token");
-        if(isLoggedIn){
+        if (isLoggedIn) {
           const checkisloggedinuser = await axios.get(`${config.url}user/`, {
             headers: { Authorization: `Bearer ${token2}` },
           });
-          console.log(checkisloggedinuser.data[0]);
           
-            setIsOwnProfile(checkisloggedinuser.data[0].id == userId);
+          setIsOwnProfile(checkisloggedinuser.data[0].id == userId);
 
-            if(checkisloggedinuser.data[0].id !== null){
-              setOwnUserId(checkisloggedinuser.data[0].id);
-            }
-            
+          if (checkisloggedinuser.data[0].id !== null) {
+            setOwnUserId(checkisloggedinuser.data[0].id);
+          }
         }
-        
 
         const response = await axios.get(`${config.url}user/profile/${userId}`, {
           headers: { Authorization: `Bearer ${token2}` },
@@ -69,13 +64,12 @@ const Profile = () => {
         setUserData(response.data);
         setFollows(response.data.follows);
 
-        // Set form data to the user's current data
         setFormData({
           first_name: response.data.user_data.first_name,
-          last_name:response.data.user_data.last_name,
+          last_name: response.data.user_data.last_name,
           username: response.data.user_data.username,
           description: response.data.user_data.description,
-          profileImage: response.data.user_data.profileImage ////
+          profile_photo: response.data.user_data.profile_photo
         });
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -83,7 +77,6 @@ const Profile = () => {
     };
 
     fetchUserData();
-  
   }, [userId]);
 
   const handleInputChange = (e) => {
@@ -91,25 +84,29 @@ const Profile = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleImageChange = async (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      try {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (previewImage) {
         setUploadingImage(true);
-        
-        // Crear preview de la imagen
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setPreviewImage(e.target.result);
-        };
-        reader.readAsDataURL(file);
 
-        // Preparar el FormData para la subida
         const imageFormData = new FormData();
-        imageFormData.append('image', file);
+        const fileInput = document.getElementById('profile-image-input');
+        const file = fileInput.files[0];
+        imageFormData.append('image', file, file.name);
 
-        // Subir la imagen
-        const token = localStorage.getItem("token");
         const response = await axios.post(
           `${config.url}vendor/upload`,
           imageFormData,
@@ -120,36 +117,18 @@ const Profile = () => {
             }
           }
         );
-        console.log("response", response)
 
-
-        // Actualizar el formData con la ruta local de la imagen
         setFormData({
           ...formData,
-          profile_photo: `/src/vendor/imgs/${response.data.filename}`
+          profile_photo: `vendor/imgs/${response.data.filename}`
         });
 
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        alert("Error al subir la imagen. Por favor, intenta de nuevo.");
-      } finally {
         setUploadingImage(false);
       }
-    }
-  };
 
-  const handleSave = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      
-      // Crear una copia del formData para enviar
       const dataToSend = {
         ...formData,
         profile_photo: formData.profile_photo || userData.user_data.profile_photo
-        // Asegurarnos de que la ruta de la imagen sea relativa
-        // profile_photo: formData.profile_photo.startsWith('/src') 
-        //   ? formData.profile_photo 
-        //   : userData.user_data.profile_photo
       };
 
       await axios.put(
@@ -159,9 +138,7 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
-      
-      // Actualizar los datos del usuario después de guardar
+
       setUserData({
         ...userData,
         user_data: { 
@@ -174,11 +151,12 @@ const Profile = () => {
     } catch (error) {
       console.error("Error saving user data", error);
       alert("Error al guardar los cambios. Por favor, intenta de nuevo.");
+      setUploadingImage(false);
     }
   };
 
   const loadChat = async () => {
-    try{
+    try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
         `${config.url}chat/get/${userId}`,
@@ -186,36 +164,32 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      navigate(`/privateChat/${ownUserId}/${response.data}`);
-    }
-    catch(error){
+      navigate(`/chatsview/?openId=${response.data}`);
+    } catch (error) {
       console.error(error);
     }
-    
   };
 
   if (!userData) return <div>Loading...</div>;
 
   return (
     <div className="profile-container">
-      
       <div className="profile-headers">
-
-        <div className="profile-picture-and-name profile-backgorund"> {/*foto de perfil y nombre */}
+        <div className="profile-picture-and-name profile-backgorund">
           <div className="picture">
-          <img
-            src={userData.user_data.profile_photo}
-            alt={userData.user_data.username}
-            className="profile-pic"
+            <img
+              src={userData.user_data.profile_photo}
+              alt={userData.user_data.username}
+              className="profile-pic"
             />
-            </div>
-            <div className="name">
-              <h1>{userData.user_data.first_name}</h1>
-              <p>@{userData.user_data.username}</p>
-            </div>
+          </div>
+          <div className="name">
+            <h1>{userData.user_data.first_name}</h1>
+            <p>@{userData.user_data.username}</p>
+          </div>
         </div>
-      
-      <div className="profile-description profile-backgorund"> {/* descripcion */}
+
+        <div className="profile-description profile-backgorund">
           {editing ? (
             <>
               <input
@@ -224,28 +198,27 @@ const Profile = () => {
                 value={formData.first_name}
                 onChange={handleInputChange}
                 placeholder="Nombre"
-                />
-
+              />
               <input 
                 type="text"
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleInputChange}
                 placeholder="Apellido"
-                />
+              />
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
                 placeholder="@Usuario"
-                />
+              />
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Descripción"
-                />
+              />
 
               <div className="image-upload">
                 <label 
@@ -256,7 +229,7 @@ const Profile = () => {
                     display: 'block',
                     position: 'relative'
                   }}
-                  >
+                >
                   <img
                     src={previewImage || formData.profile_photo || userData.user_data.profile_photo}
                     alt="Imagen de perfil"
@@ -266,7 +239,7 @@ const Profile = () => {
                       height: '150px',
                       objectFit: 'cover'
                     }}
-                    />
+                  />
                   <div 
                     style={{
                       position: 'absolute',
@@ -285,7 +258,7 @@ const Profile = () => {
                         opacity: 1
                       }
                     }}
-                    >
+                  >
                     {uploadingImage ? 'Subiendo...' : 'Cambiar imagen'}
                   </div>
                 </label>
@@ -296,7 +269,7 @@ const Profile = () => {
                   onChange={handleImageChange}
                   style={{ display: 'none' }}
                   disabled={uploadingImage}
-                  />
+                />
               </div>
               <Button text="Guardar" onClick={handleSave} disabled={uploadingImage} />
               <Button text="Cancelar" onClick={() => {
@@ -306,64 +279,61 @@ const Profile = () => {
             </>
           ) : (
             <div className="desc">
-            <p>{userData.user_data.description}</p>
+              <p>{userData.user_data.description}</p>
             </div>
           )}
-        <div className="profile-actions"> {/*seguir etc */}
-          {isOwnProfile ? (
-            <>
-              <Button text="Editar Perfil" onClick={() => setEditing(true)} />
-              <Button text="Configuración" />
-              <Button text="Cerrar sesión" onClick={() => LogOut()}/>
-            </>
-          ) : (
-            <>
-              {follows ? (
-                <Button
-                  onClick={() => unFollowHandler(userId, setFollows,setUserData)}
-                  text="Dejar de seguir"
-                />
-              ) : (
-                <Button
-                  text="Seguir"
-                  onClick={() =>
-                    followHandler(userId, setFollows, isLoggedIn, openModalNavBar, setUserData)
+          <div className="profile-actions">
+            {isOwnProfile ? (
+              <>
+                <Button text="Editar Perfil" onClick={() => setEditing(true)} />
+                <Button text="Configuración" />
+                <Button text="Cerrar sesión" onClick={() => LogOut()}/>
+              </>
+            ) : (
+              <>
+                {follows ? (
+                  <Button
+                    onClick={() => unFollowHandler(userId, setFollows, setUserData)}
+                    text="Dejar de seguir"
+                  />
+                ) : (
+                  <Button
+                    text="Seguir"
+                    onClick={() =>
+                      followHandler(userId, setFollows, isLoggedIn, openModalNavBar, setUserData)
+                    }
+                  />
+                )}
+                <Button onClick={async (e) => {
+                  if (!isLoggedIn) {
+                    e.preventDefault();
+                    openModalNavBar();
+                  } else {
+                    await loadChat();
                   }
-                />
-              )}
-              <Button onClick={async (e) => {
-              if (!isLoggedIn) {
-                e.preventDefault();
-                openModalNavBar();
-              }
-              else{
-                await loadChat();
-              }
                 }} text="Mensaje"/>
-              <Button text="Dar Insignia" />
-            </>
-          )}
-        </div>
+                <Button text="Dar Insignia" />
+              </>
+            )}
           </div>
+        </div>
       </div>
 
-          <div className="profile-stats profile-backgorund"> {/* numeritos */}
-            <span>{userData.user_data.post_number} Prendas</span>
-            <span>{userData.user_data.follower_number} Seguidores</span>
-            <span>{userData.user_data.followed_number} Seguidos</span>
-          </div>
-        
-      
+      <div className="profile-stats profile-backgorund">
+        <span>{userData.user_data.post_number} Prendas</span>
+        <span>{userData.user_data.follower_number} Seguidores</span>
+        <span>{userData.user_data.followed_number} Seguidos</span>
+      </div>
 
-      <section className="profile-content"> {/* mis diseños empeiza aca */}
+      <section className="profile-content">
         <div className="columns">
           {userData.posts !== null
             ? userData.posts.map((item) => (
               <Link
-              to={`/post/${item.id}`}
+                to={`/post/${item.id}`}
+                key={item.id}
               >
                 <Carta
-                  key={item.id}
                   post_id={item.id}
                   cloth={item.image}
                   profile_photo={userData.user_data.profile_photo}
@@ -372,13 +342,12 @@ const Profile = () => {
                   putLike={true}
                   className="profile-post"
                 />
-                </Link>
+              </Link>
             ))
           : null}
-          </div>
+        </div>
       </section>
     </div>
-    
   );
 };
 
