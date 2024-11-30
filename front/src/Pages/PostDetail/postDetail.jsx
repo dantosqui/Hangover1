@@ -69,7 +69,7 @@ const PostDetail = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        if (response.status === 201) {
+        if (response.status === 201) {  
           console.log("Add to shopping_cart successfully!");
         } else {
           console.error("Failed to add to shopping cart");

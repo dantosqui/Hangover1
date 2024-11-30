@@ -286,7 +286,6 @@ const Profile = () => {
             {isOwnProfile ? (
               <>
                 <Button text="Editar Perfil" onClick={() => setEditing(true)} />
-                <Button text="Configuración" />
                 <Button text="Cerrar sesión" onClick={() => LogOut()}/>
               </>
             ) : (

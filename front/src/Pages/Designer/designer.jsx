@@ -768,9 +768,6 @@ const Designer = () => {
             >
               <option value="square">Cuadrado</option>
               <option value="circle">Círculo</option>
-              <option value="rectangle">Rectángulo</option>
-              <option value="triangle">Triángulo</option>
-              <option value="diamond">Diamante</option>
             </select>
             <button className="designer-button" onClick={() => removeShape(selectedItem.id)}>-</button>
           </div>
