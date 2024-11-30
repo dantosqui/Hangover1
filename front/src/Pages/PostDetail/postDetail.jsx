@@ -146,7 +146,7 @@ const PostDetail = () => {
             comment_id: newComment.comment_id,
             username: currentUser.username,
             content: newCommentContent,
-            profile_photo: "URL_TO_YOUR_PROFILE_PHOTO",
+            profile_photo: currentUser.profile_photo,
             date: new Date().toISOString(),
           },
         },
@@ -271,7 +271,9 @@ const PostDetail = () => {
   const previewImageUrl = post.front_image;
   const previewTitle = post.title;
   const previewDescription = post.description;
-  
+  console.log("currentUser:", currentUser); // Verifica todo el objeto
+  console.log("Profile photo:", currentUser[0]?.profile_photo); // Verifica específicamente la propiedad
+
   return (
     <>
      <Helmet>
@@ -292,7 +294,7 @@ const PostDetail = () => {
         <meta property="twitter:description" content={post?.description} />
         <meta property="twitter:image" content={post?.front_image} />
 
-        <meta property="og:site_name" content="Hangover" /> FZ mira el mensaje que te mande hola fz holaaaafz 
+        <meta property="og:site_name" content="Hangover" /> 
         <meta property="og:locale" content="es_ES" />
       </Helmet>
       
@@ -455,8 +457,7 @@ const PostDetail = () => {
                     </div>
                     <div className={styles.newComment}>
                       <img
-                        src={currentUser ? currentUser.profile_photo : "../../vendor/profileicon.png"}
-                        alt="Profile"
+                        src={currentUser[0].profile_photo ? currentUser[0].profile_photo : "../../vendor/profileicon.png"}
                         className={styles.creatorImage}
                       />
                       <div className={styles.newCommentText}>
