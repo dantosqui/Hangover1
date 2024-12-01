@@ -1,14 +1,14 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { openModal } from './components/NavBar/navbar';
 import axios from 'axios';
 import config from './config';
-
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
+    const [profilePhotoTrigger, setProfilePhotoTrigger] = useState(0);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -21,34 +21,27 @@ export const AuthProvider = ({ children }) => {
 
     const openModalNavBar = () => {
         if (!isLoggedIn) {
-            // Define openModal here or import it if it's defined elsewhere
             openModal();
         }
     };
 
     const strictCheckAuth = async (navigate) => {
         const token = localStorage.getItem('token');
-        try{
-            
-            const trueLoggedIn = await axios.get(config.url+"user/checkToken",{
-            headers:{Authorization:`bearer ${token}`}
-            })
-            
-        
-
-            return true
-            
+        try {
+            await axios.get(config.url+"user/checkToken", {
+                headers: {Authorization: `bearer ${token}`}
+            });
+            return true;
+        } catch {
+            navigate("/");
+            return false;
         }
-        catch{
-            
-            navigate("/")
-            return false
-        }
-
     }
 
     const updateUser = (updatedUser) => {
         setUser(updatedUser);
+        // Incrementar el trigger para forzar re-renderizado
+        setProfilePhotoTrigger(prev => prev + 1);
     };
 
     const fetchUserInfo = async () => {
@@ -75,7 +68,16 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, openModalNavBar, strictCheckAuth, fetchUserInfo, user, updateUser }}>
+        <AuthContext.Provider value={{ 
+            isLoggedIn, 
+            setIsLoggedIn, 
+            openModalNavBar, 
+            strictCheckAuth, 
+            fetchUserInfo, 
+            user, 
+            updateUser,
+            profilePhotoTrigger // Agregamos este trigger
+        }}>
             {children}
         </AuthContext.Provider>
     );
