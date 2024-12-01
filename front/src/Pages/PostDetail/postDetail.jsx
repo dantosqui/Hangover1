@@ -10,6 +10,7 @@ import { AuthContext } from "../../AuthContext.js";
 import { guardarHandler, eliminarGuardadoHandler } from "../../universalhandlers.js";
 import ShareButtons from "../../components/BotonCompartir/botonCompartir.jsx";
 import { Helmet } from "react-helmet";
+import standardUser from "../../vendor/imgs/standardUser.png"
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -274,6 +275,7 @@ const PostDetail = () => {
   console.log("currentUser:", currentUser); // Verifica todo el objeto
   console.log("Profile photo:", currentUser[0]?.profile_photo); // Verifica específicamente la propiedad
 
+
   return (
     <>
      <Helmet>
@@ -402,10 +404,11 @@ const PostDetail = () => {
           <Link to={"/user/" + post.creatoruser.id}>
             <div className={styles.creator}>
             <img
-              src={post.creatoruser.profile_photo} 
-              alt="Profile"
-              className={styles.creatorImage}
-            />
+  src={post.creatoruser.profile_photo || standardUser}
+  alt="Profile"
+  className={styles.creatorImage}
+/>
+
               <div className={styles.creatorInfo}>
                 <h3>{post.creatoruser.username}</h3>
                 <p>{post.creatoruser.follower_number} seguidores</p>
@@ -457,7 +460,7 @@ const PostDetail = () => {
                     </div>
                     <div className={styles.newComment}>
                       <img
-                        src={currentUser[0].profile_photo ? currentUser[0].profile_photo : "../../vendor/profileicon.png"}
+                        src={currentUser[0].profile_photo ? currentUser[0].profile_photo :  standardUser}
                         className={styles.creatorImage}
                       />
                       <div className={styles.newCommentText}>

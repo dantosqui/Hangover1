@@ -93,8 +93,6 @@ const Navbar = () => {
 
         <Link className='logoA' to="/"><img className='pagelogo' src={southside2} alt="Hangover Logo" /></Link>
         
-        
-       
         <nav >
           <div className='navBotonesNavbar'>
       

@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { guardarHandler, eliminarGuardadoHandler, followHandler, unFollowHandler } from "../../universalhandlers.js";
 import Carta from "../../components/Carta/carta.jsx";
+import standardUser from "../../vendor/imgs/standardUser.png"
+
 
 const Profile = () => {
   const { userId } = useParams();
@@ -69,7 +71,7 @@ const Profile = () => {
           last_name: response.data.user_data.last_name,
           username: response.data.user_data.username,
           description: response.data.user_data.description,
-          profile_photo: response.data.user_data.profile_photo
+          profile_photo: response.data.user_data.profile_photo 
         });
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -119,8 +121,8 @@ const Profile = () => {
           }
         );
   
-        // Update to use backend port and correct image path
         updatedProfilePhoto = `http://localhost:3508/images/${response.data.filename}`;
+        
         setUploadingImage(false);
       }
   
@@ -171,17 +173,18 @@ const Profile = () => {
   };
 
   if (!userData) return <div>Loading...</div>;
-
+console.log("foto de perfil: " + userData.user_data.profile_photo)
   return (
     <div className="profile-container">
       <div className="profile-headers">
         <div className="profile-picture-and-name profile-backgorund">
           <div className="picture">
-            <img
-              src={userData.user_data.profile_photo}
-              alt={userData.user_data.username}
-              className="profile-pic"
-            />
+          <img 
+  src={userData.user_data.profile_photo || standardUser} 
+  alt={userData.user_data.username} 
+  className="profile-pic" 
+/>
+
           </div>
           <div className="name">
             <h1>{userData.user_data.first_name}</h1>
