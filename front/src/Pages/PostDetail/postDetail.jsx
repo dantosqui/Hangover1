@@ -176,7 +176,11 @@ const PostDetail = () => {
         });
         
         const { post, comments, liked, saved, canComment } = response.data;
-        setSaved(saved);
+        if (response.data.userHasSavedPost !== undefined) {
+          setSaved(response.data.userHasSavedPost); // Cambia el campo según el nombre correcto en la respuesta.
+        } else {
+          setSaved(false); // Evitar mostrar "Guardado" por defecto.
+        }
         setPost(post[0]);
         setComments(canComment ? comments.collection : []);
         setSelectedImage(post[0].front_image);
