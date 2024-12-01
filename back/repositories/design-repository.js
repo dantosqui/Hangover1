@@ -11,7 +11,8 @@ export class DesignRepository {
     async get(userId, designId) {
         const sql = `SELECT 
         json_build_object (
-            'image', image,
+            'front_image', front_image,
+            'back_image',back_image
             'design_data', design_data
         ) AS info FROM designs WHERE id_creator_user = $1 AND id = $2`;
         const values = [userId, designId];
@@ -26,18 +27,18 @@ export class DesignRepository {
         }
     }
 
-    async save(userId, designId, image,data){
+    async save(userId, designId, front_image,back_image,data){
         let sql;
         let values;
 
     
         if(designId === undefined){
-            sql = "INSERT INTO designs (last_edit, id_creator_user,parent_id,image,design_data) VALUES (CURRENT_TIMESTAMP, $1, null, $2,$3) returning id";
-            values = [userId, image,data];
+            sql = "INSERT INTO designs (last_edit, id_creator_user,parent_id,front_image,back_image,design_data) VALUES (CURRENT_TIMESTAMP, $1, null, $2,$3,$4) returning id";
+            values = [userId, front_image,back_image,data];
         }
         else{
-            sql = "UPDATE designs SET image = $3, last_edit = CURRENT_TIMESTAMP, design_data=$4 WHERE id_creator_user = $1 AND id = $2 returning id";
-            values = [userId, designId, image,data];
+            sql = "UPDATE designs SET front_image = $3, back_image = $4, last_edit = CURRENT_TIMESTAMP, design_data=$5 WHERE id_creator_user = $1 AND id = $2 returning id";
+            values = [userId, designId, front_image,back_image,data];
         }
         
         

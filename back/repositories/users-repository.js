@@ -113,7 +113,8 @@ export class UserRepository {
                     designs.last_edit, 
                     designs.id_creator_user, 
                     designs.parent_id, 
-                    designs.image, 
+                    designs.front_image, 
+                    designs.back_image,
                     users.id as id_user
                 FROM 
                     designs 

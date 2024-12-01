@@ -11,8 +11,8 @@ export default class DesignService {
         return response;
     }
 
-    async save(userId, designId, image,data){
-        const response = await this.bd.save(userId, designId, image,data);
+    async save(userId, designId, front_image, back_image,data){
+        const response = await this.bd.save(userId, designId, front_image, back_image,data);
         return response;
     }
 }

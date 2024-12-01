@@ -1,5 +1,5 @@
-import  express from "express";
-import { AuthMiddleware } from "../auth/authMiddleware.js";
+import  express from "express"; 
+import { AuthMiddleware } from "../auth/authMiddleware.js";//
 import DesignService from "../services/design-service.js"
 
 const router = express.Router()
@@ -22,10 +22,11 @@ router.post("/save", AuthMiddleware, async (req, res) => {
     
     const user = req.user.id;
     const desingId = req.body.designId;
-    const image = req.body.image;
+    const front_image = req.body.front_image;
+    const back_image = req.body.back_image;
     const data = req.body.designData;
     
-    const saved = await designService.save(user, desingId, image,data);
+    const saved = await designService.save(user, desingId, front_image,back_image,data);
     
     if(saved === false){
         return res.status(401).send();
