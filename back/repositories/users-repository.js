@@ -114,7 +114,7 @@ export class UserRepository {
                     designs.id_creator_user, 
                     designs.parent_id, 
                     designs.image, 
-                    users.* 
+                    users.id as id_user
                 FROM 
                     designs 
                 INNER JOIN 
@@ -128,7 +128,7 @@ export class UserRepository {
             const liked = await this.DBClient.query(queryLiked, [userId]);
             const saved = await this.DBClient.query(querySaved, [userId]);
             const borradores = await this.DBClient.query(queryBorradores, [userId]);
-    
+    console.log("HOLA TIOSD",borradores)
             const posts = {
                 liked: liked.rows,
                 saved: saved.rows,

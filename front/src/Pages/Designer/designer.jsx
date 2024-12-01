@@ -522,6 +522,7 @@ const Designer = () => {
       const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
       saveImage(dataUrl);
       modalPublish();
+      console.log(dataUrl)
       setHasChanges(false);
     }else{
       openModalNavBar()
@@ -565,12 +566,13 @@ const Designer = () => {
     };
 
     const designJSON = JSON.stringify(designData);
-    
+      console.log("EL LOG QUE BVUSCAS;", designId)
     const token = localStorage.getItem('token');
     try {
       const response = await axios.post(`${config.url}design/save`, { designId: designId, image: dataUrl, designData: designJSON }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log(response.data)
       setSavedShirtId(response.data)
     } catch (error) {
       console.error('Error saving shirt:', error);
@@ -985,7 +987,7 @@ const Designer = () => {
       {hasChanges ? (
       <div className="centrador">
         <button className="designer-button" onClick={handleCapture}>
-          Guardar diseño {currentView === 'front' ? 'Vista Frontal' : 'Vista Trasera'}
+          Guardar diseño
         </button>
       </div>
     ) : (

@@ -73,6 +73,7 @@ const LibraryPage = () => {
           const { saved, liked, borradores } = libraryResponse.data;
           if (Array.isArray(saved) && Array.isArray(liked) && Array.isArray(borradores)) {
             const draftItemsWithBlobUrls = await processBlobs(borradores);
+            console.log("BORRADORS", libraryResponse.data)
             setItems({
               saved,
               liked,
