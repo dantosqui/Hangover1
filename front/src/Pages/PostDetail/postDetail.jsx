@@ -274,7 +274,7 @@ const PostDetail = () => {
   const previewTitle = post.title;
   const previewDescription = post.description;
   console.log("currentUser:", currentUser); // Verifica todo el objeto
-  console.log("Profile photo:", currentUser[0]?.profile_photo); // Verifica específicamente la propiedad
+  //console.log("Profile photo:", currentUser[0]?.profile_photo); // Verifica específicamente la propiedad
 
 
   return (
@@ -431,7 +431,7 @@ const PostDetail = () => {
                           className={styles.commentItem}
                         >
                           <img
-                              src={commentData.comment.profile_photo || "../../vendor/profileicon.png"}
+                              src={commentData.comment.profile_photo || standardUser}
                               alt="Commenter"
                               className={styles.commenterImage}
                             />
@@ -460,10 +460,14 @@ const PostDetail = () => {
                       </div>
                     </div>
                     <div className={styles.newComment}>
-                      <img
-                        src={currentUser[0].profile_photo ? currentUser[0].profile_photo :  standardUser}
-                        className={styles.creatorImage}
-                      />
+                    <img
+  src={
+    currentUser?.length > 0 && currentUser[0].profile_photo 
+      ? currentUser[0].profile_photo 
+      : standardUser
+  }
+  className={styles.creatorImage}
+/>
                       <div className={styles.newCommentText}>
                         <textarea
                           onClick={checkLogin}

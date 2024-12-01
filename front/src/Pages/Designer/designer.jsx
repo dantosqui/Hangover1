@@ -10,7 +10,11 @@ import ContextMenu from '../../components/ContextMenu/ContextMenu';
 import { redirect, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 
+
 const Designer = () => {
+  
+const frontRef = useRef(null); // Para la vista frontal
+const backRef = useRef(null);  // Para la vista trasera
   const location = useLocation();
   const { designId } = location.state || {};
   const { isLoggedIn, setIsLoggedIn, openModalNavBar } = useContext(AuthContext);
@@ -67,8 +71,8 @@ const Designer = () => {
     paths,
   });
   //
-  useEffect(() => {
-    const saveDesignToLocalStorage = () => {
+  useEffect(() => {//ahh dice y xd :V
+    const saveDesignToLocalStorage = () => { 
       const storedDesign = localStorage.getItem('design');
       const isDuplicate = storedDesign && JSON.stringify(designData) === storedDesign;
       if (!isDuplicate) {
@@ -515,14 +519,19 @@ const Designer = () => {
     setSelectedItem(null);
     setSelectedItemType(null);
   };
-  const handleCapture = async () => {
+  const handleCapture = async () => { 
     if (shirtRef.current && isLoggedIn) {
       clearSelection()
       const canvas = await html2canvas(shirtRef.current);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-      saveImage(dataUrl);
+      setCurrentView('front')
+      
+      const dataUrl1 = canvas.toDataURL('image/jpeg', 0.8);
+      setCurrentView('back')
+      const dataUrl2 = canvas.toDataURL('image/jpeg', 0.8);
+      saveImage(dataUrl1,dataUrl2);
       modalPublish();
-      console.log(dataUrl)
+      console.log(dataUrl1)
+      console.log(dataUrl2)
       setHasChanges(false);
     }else{
       openModalNavBar()
@@ -542,20 +551,20 @@ const Designer = () => {
     
   }
 
-  const saveImage = (dataUrl) => {
+  const saveImage = (dataUrl1, dataUrl2) => {
     const link = document.createElement('a');
-    link.href = dataUrl;
+    link.href = dataUrl1;
   
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      saveShirt(dataUrl);
+      saveShirt(dataUrl1,dataUrl2);
     });
   
     link.click();
     setHasChanges(false)
   }
 
-  const saveShirt = async (dataUrl) => {
+  const saveShirt = async (dataUrl1,dataUrl2) => {
     const designData = {
       color,
       pattern,
@@ -569,7 +578,7 @@ const Designer = () => {
       console.log("EL LOG QUE BVUSCAS;", designId)
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.post(`${config.url}design/save`, { designId: designId, image: dataUrl, designData: designJSON }, {
+      const response = await axios.post(`${config.url}design/save`, { designId: designId, front_image: dataUrl1,back_image: dataUrl2, designData: designJSON }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log(response.data)

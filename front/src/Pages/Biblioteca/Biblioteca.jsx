@@ -100,10 +100,13 @@ const LibraryPage = () => {
     try {
       return Promise.all(items.map(async (item) => {
         
-        const blobResponse = await fetch(item.image);
-        const blob = await blobResponse.blob();
-        const url = URL.createObjectURL(blob);
-        return { ...item, image: url };
+        let blobResponse = await fetch(item.front_image);
+        let blob = await blobResponse.blob();
+        const url1 = URL.createObjectURL(blob);
+        blobResponse = await fetch(item.back_image);
+        blob = await blobResponse.blob();
+        const url2 = URL.createObjectURL(blob)
+        return { ...item, front_image: url1 , back_image: url2};
       }));
     } catch (error) {
       console.error('Error processing blobs:', error);
@@ -203,11 +206,11 @@ const LibraryPage = () => {
               ))
             ) : (
               displayedItems.map((item, index) => (
-                <div className="designItemWrapper" key={`${item.image}-${index}`}>
+                <div className="designItemWrapper" key={`${item.front_image}-${index}`}>
                   <Link to="/designer" state={{ designId: item.id }}>
                     
                     <CartaSimple 
-                      cloth={item.image} 
+                      cloth={item.front_image} 
                       profile_photo={userInfo[0]?.profile_photo || '/ruta/a/tu/imagen/default.png'}
                       isPublished={publishedDesigns.has(item.id)}
                       design_id={item.id}
