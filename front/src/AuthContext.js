@@ -8,7 +8,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -47,6 +47,10 @@ export const AuthProvider = ({ children }) => {
 
     }
 
+    const updateUser = (updatedUser) => {
+        setUser(updatedUser);
+    };
+
     const fetchUserInfo = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -71,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, openModalNavBar, strictCheckAuth, fetchUserInfo }}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, openModalNavBar, strictCheckAuth, fetchUserInfo, user, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

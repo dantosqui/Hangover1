@@ -26,6 +26,7 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isInfoClicked, setIsInfoClicked] = useState(false)
 
+  
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');

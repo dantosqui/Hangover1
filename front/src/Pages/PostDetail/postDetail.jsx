@@ -119,11 +119,8 @@ const PostDetail = () => {
   }
 
   const newComment = async () => {
-    if (!commentsAllowed) {
-      //console.log("Los comentarios están desactivados para este post.");
-      return;
-    }
-
+    if (!commentsAllowed) return;
+  
     const content = newCommentContent;
     try {
       const token = localStorage.getItem("token");
@@ -138,16 +135,16 @@ const PostDetail = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      const newComment = response.data;
+  
+      const newCommentFromServer = response.data;
       setComments((prevComments) => [
         ...prevComments,
         {
           comment: {
-            comment_id: newComment.comment_id,
-            username: currentUser.username,
+            comment_id: newCommentFromServer.comment_id,
+            username: currentUser?.username || (currentUser && currentUser[0]?.username),
             content: newCommentContent,
-            profile_photo: currentUser.profile_photo,
+            profile_photo: currentUser?.profile_photo || (currentUser && currentUser[0]?.profile_photo) || standardUser,
             date: new Date().toISOString(),
           },
         },
