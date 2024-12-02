@@ -88,6 +88,10 @@ async InsertPost(post){
         return val;
     }
     
+    async GetSaved(saved){
+        const guardado = await this.bd.isSavedByUser(saved.user_id, saved.post_id);
+        return guardado;
+    }
     
 
 }

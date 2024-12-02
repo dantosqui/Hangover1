@@ -65,6 +65,15 @@ body{
   align-items: flex-start;
   margin-bottom: 20px;
 }
+.cantidadEstilo{
+  width: 100%;
+}
+.talleEstilo{
+  width: 100%;
+}
+.sizeAndQuantity{
+  width: 100%;
+}
 .title {
   font-size: 24px;
   margin: 0;
@@ -72,7 +81,8 @@ body{
 .actionButtons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 1rem;
 }
 .description {
   color: #666;
@@ -230,4 +240,11 @@ justify-content: center;
   align-items: center;
   gap: 16rem;
   
+}
+
+/* En tu archivo CSS (por ejemplo, postdetail.module.css) */
+.cartButtonWrapper {
+  position: sticky;
+  top: 10px; /* Ajusta la distancia desde la parte superior */
+  z-index: 10; /* Asegúrate de que esté por encima de otros contenidos */
 }

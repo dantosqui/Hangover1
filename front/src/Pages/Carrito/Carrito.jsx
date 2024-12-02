@@ -1,17 +1,12 @@
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from "../../config.js";
-import React, { useState, useEffect } from 'react';
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react"
+import './Carrito.css'; 
 
 const Carrito = () => {
-    /*const [carritoStuff, setCarritoStuff] = useState([]);
+    const [carritoStuff, setCarritoStuff] = useState([]);
     const [error, setError] = useState(null);
     const [totalAmount, setTotalAmount] = useState(0);
-    const [preferenceId, setPreferenceId] = useState(null);
-
-    initMercadoPago("APP_USR-4dccab7e-c2b9-4aa0-9d07-facc29975cb0", {
-        locale: "es-AR",
-    });
 
     useEffect(() => {
         const loadCarrito = async () => {
@@ -20,17 +15,11 @@ const Carrito = () => {
                 const response = await axios.get(`${config.url}user/carrito`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-
-                if (response.data && typeof response.data === 'object') {
-                    if (Array.isArray(response.data.carritoStuff)) {
-                        setCarritoStuff(response.data.carritoStuff);
-                    } else {
-                        setError("API response format is incorrect");
-                        console.error("Incorrect data format:", response.data);
-                    }
+                if (response.data && Array.isArray(response.data.carritoStuff)) {
+                    setCarritoStuff(response.data.carritoStuff);
                 } else {
-                    setError("Invalid API response");
-                    console.error("Invalid response:", response.data);
+                    setError("API response format is incorrect");
+                    console.error("Incorrect data format:", response.data);
                 }
             } catch (error) {
                 setError("Error fetching items");
@@ -41,81 +30,61 @@ const Carrito = () => {
     }, []);
 
     useEffect(() => {
-       let totalPrice = 0;
+        let totalPrice = 0;
         carritoStuff.forEach(element => {
             totalPrice += parseFloat(element.quantity * element.price);
         });
         setTotalAmount(totalPrice);
-        
     }, [carritoStuff]);
-    
 
-   /* const mp = new MercadoPago("YOUR_PUBLIC_KEY", { //el pete de shebar dejo un error y se fue shebar sos alto pete dejaste un error aca y te fuiste esto es un error
-        locale: "es-AR",
-    });*/
+    const handleCheckout = async (totalAmount) => {
+        alert("Estamos trabajando en el sistema de pago. Gracias por tu paciencia.");
+    };
 
-//    const handleCheckout = async () => {
-//        
-//        try{
-//        
-//
-//            const response = await axios.post(`${config.url}payment/create_preference`, { 
-//                title: "YO",
-//                quantity: 1,
-//                price: totalAmount
-//            },
-//            {
-//              headers: {
-//                "Content-Type": "application/json", // Define el tipo de contenido como JSON
-//              },
-//            });
-//
-//            const { id } = response.data;
-//            console.log(id);
-//            return id;
-//        } catch (error){
-//            console.log(error);
-//        }
-//        /*try {
-//            const res = await axios.post(`${config.url}payment/create-order`);
-//            const data = res.data; // Axios ya parsea la respuesta JSON
-//            window.location.href = data.init_point;
-//        } catch (error) {
-//            console.error('Error during checkout:', error);
-//        }*/
-//    };
 
-    /*
-    const handleBuy = async () => {
-        const id = await handleCheckout();
-        if(id){
-            setPreferenceId(id);
-        }
-    }
-    */
     return (
-        <>
-        {/*<script src="https://sdk.mercadopago.com/js/v2"></script>
-            {error && <p>{error}</p>}
-            {console.log(carritoStuff)}
-            {carritoStuff && carritoStuff.map((item, index) => (
-                <div key={index}>
-                    <h3>{index}</h3>
-                    <img src={item.front_image} alt={`Product ${index}`} width="100px" height="auto"/>
-                    <ul>
-                        <li>Precio unitario: {item.price}</li>
-                        <li>Cantidad: {item.quantity}</li>
-                        <li>Precio total: {item.price * item.quantity}</li>
-                    </ul>
+        <div className="carrito-container">
+            <script src="https://sdk.mercadopago.com/js/v2"></script>
+            {error && <div className="error-message">{error}</div>}
+            {carritoStuff.length === 0 ? (
+                <div className="empty-cart">
+                    <h2>¡El carrito está vacío! 😔</h2>
+                    <p>Agrega productos para empezar a comprar.</p>
                 </div>
-            ))}
-            <h3>Precio total del carrito: {totalAmount}</h3>
-            <button onClick={handleBuy}>Pay</button>
-            {preferenceId && <Wallet initialization={{ preferenceId: preferenceId }} />}
-            */}
-            <p>Carrito es un trabajo en progreso</p>
-            </>
-    );
+            ) : (
+                <div className="cart-items">
+                    {carritoStuff.map((item, index) => (
+                        <div key={index} className="cart-item">
+                            <div className="cart-item-image-container">
+                                <img src={item.front_image} alt={`Product ${index}`} className="cart-item-image" />
+                            </div>
+                            <div className="cart-item-info">
+                                <h3 className="cart-item-title">{item.title}</h3>
+                                <div className="cart-item-details">
+                                    <div className="cart-item-quantity">
+                                        <span>Talle:</span> {item.size}
+                                    </div>
+                                    <div className="cart-item-quantity">
+                                        <span>Cantidad:</span> {item.quantity}
+                                    </div>
+                                    <div className="cart-item-price">
+                                        <span>Precio unitario:</span> ${item.price}
+                                    </div>
+                                    <div className="cart-item-total">
+                                        <span>Precio total:</span> ${item.price * item.quantity}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            <div className="total-amount">
+                <h3>Total del carrito: ${totalAmount.toFixed(2)}</h3>
+                <button className="checkout-button" onClick={() => handleCheckout(totalAmount)}>Pagar ahora</button>
+            </div>
+        </div>
+    ); 
 };
 
 export default Carrito;

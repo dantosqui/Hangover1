@@ -77,7 +77,7 @@ function App() {
             <Route exact path=":userId" element={<Profile />} />
           </Route>
           <Route path="/designer" element={<Designer />} />
-          <Route exact path="bolsa" element={<Bolsa />} />
+          <Route exact path="bolsa" element={<Carrito />} />
           <Route exact path="/biblioteca" element={<Biblioteca />} />
           <Route exact path="/search">
             <Route exact path=":search" element={<Search />} />

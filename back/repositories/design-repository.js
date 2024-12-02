@@ -12,13 +12,13 @@ export class DesignRepository {
         const sql = `SELECT 
         json_build_object (
             'front_image', front_image,
-            'back_image',back_image
+            'back_image',back_image,
             'design_data', design_data
         ) AS info FROM designs WHERE id_creator_user = $1 AND id = $2`;
         const values = [userId, designId];
-        
+        console.log("ES AQUI DONDE FALLA, NO ES CIERTO?")
         const design = (await this.DBClient.query(sql, values)).rows[0];
-        
+       
         if(design){
             return JSON.stringify(design);
         }
@@ -28,10 +28,12 @@ export class DesignRepository {
     }
 
     async save(userId, designId, front_image,back_image,data){
+        try{
+            
         let sql;
         let values;
 
-    
+        
         if(designId === undefined){
             sql = "INSERT INTO designs (last_edit, id_creator_user,parent_id,front_image,back_image,design_data) VALUES (CURRENT_TIMESTAMP, $1, null, $2,$3,$4) returning id";
             values = [userId, front_image,back_image,data];
@@ -44,7 +46,14 @@ export class DesignRepository {
         
         const saved = await this.DBClient.query(sql, values);
           // Esto imprimirá las filas retornadas
+        console.log("diseño guardado: ",saved)
         return saved.rows[0].id;
+
+        
+        }
+        catch(e){
+            console.log("error guardando post: ",e)
+        }
     }
 }
    

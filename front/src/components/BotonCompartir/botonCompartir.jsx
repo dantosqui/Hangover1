@@ -73,13 +73,13 @@ const ShareButtons = ({ url, message, image, title, description }) => {
   
     const copyToClipboard = () => {
       // Codificar el mensaje y la imagen para su uso seguro en la URL
-      const encodedMessage = encodeURIComponent(message);
-      const encodedImage = encodeURIComponent(image);
+      //const encodedMessage = encodeURIComponent(message);
+      //const encodedImage = encodeURIComponent(image);
       
       // Crear la URL con el mensaje y la imagen como parámetros de consulta
-      const urlWithParams = `${url}?message=${encodedMessage}&image=${encodedImage}`;
+      //const urlWithParams = `${url}?message=${encodedMessage}&image=${encodedImage}`;
   
-      navigator.clipboard.writeText(urlWithParams).then(() => {
+      navigator.clipboard.writeText(url).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });

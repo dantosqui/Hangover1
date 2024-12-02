@@ -150,6 +150,7 @@ const Profile = () => {
       setFormData(dataToSend);
       setEditing(false);
       setPreviewImage(null);
+      
     } catch (error) {
       console.error("Error saving user data", error);
       alert("Error al guardar los cambios. Por favor, intenta de nuevo.");

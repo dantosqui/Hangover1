@@ -129,7 +129,7 @@ export class UserRepository {
             const liked = await this.DBClient.query(queryLiked, [userId]);
             const saved = await this.DBClient.query(querySaved, [userId]);
             const borradores = await this.DBClient.query(queryBorradores, [userId]);
-    console.log("HOLA TIOSD",borradores)
+    //console.log("HOLA TIOSD",borradores)
             const posts = {
                 liked: liked.rows,
                 saved: saved.rows,
@@ -262,6 +262,7 @@ export class UserRepository {
                     shopping_cart.user_id,
                     shopping_cart.post_id,
                     shopping_cart.quantity,
+                    shopping_cart.size,
                     posts.title,
                     posts.description,
                     posts.price,

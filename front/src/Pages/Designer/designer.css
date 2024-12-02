@@ -17,6 +17,23 @@ display: flex;
 flex-direction: column;
 left: 0;
 }
+.guardadoCoso{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay {
+  position: absolute;  /* Change from absolute to fixed */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;  
+}
 .properties h3{
   display: flex;
   align-items: center;

@@ -10,7 +10,10 @@ import { AuthContext } from "../../AuthContext.js";
 import { guardarHandler, eliminarGuardadoHandler } from "../../universalhandlers.js";
 import ShareButtons from "../../components/BotonCompartir/botonCompartir.jsx";
 import { Helmet } from "react-helmet";
-import standardUser from "../../vendor/imgs/standardUser.png"
+import standardUser from "../../vendor/imgs/standardUser.png";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -47,14 +50,14 @@ const PostDetail = () => {
     fetchfetch()
    }, []);
   // Función para agregar al carrito
-    const agregarCarritoHandler = async () => {
+  const agregarCarritoHandler = async () => {
     if (!size) {
       setErrorMessage("Debes seleccionar un talle antes de añadir al carrito.");
       return; // Detener la ejecución si no hay talle seleccionado
     }
-
+  
     setErrorMessage(""); // Limpiar mensaje de error si todo está bien
-
+  
     if (isLoggedIn) {
       try {
         const token = localStorage.getItem("token");
@@ -70,18 +73,21 @@ const PostDetail = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        if (response.status === 201) {  
-          console.log("Add to shopping_cart successfully!");
+        if (response.status === 201) {
+          // Notificación de éxito
+          toast.success("Producto añadido al carrito");
         } else {
-          console.error("Failed to add to shopping cart");
+          toast.error("Error al añadir al carrito");
         }
       } catch (e) {
         console.error("Error adding to shopping_cart", e);
+        toast.error("Error al añadir al carrito");
       }
     } else {
       openModalNavBar();
     }
   };
+  
 
 
   const scrollToTop = () => {
@@ -176,8 +182,9 @@ const PostDetail = () => {
         });
         
         const { post, comments, liked, saved, canComment } = response.data;
-        if (response.data.userHasSavedPost !== undefined) {
-          setSaved(response.data.userHasSavedPost); // Cambia el campo según el nombre correcto en la respuesta.
+        console.log(response.data.saved);
+        if (response.data.saved !== undefined) {
+          setSaved(response.data.saved); // Cambia el campo según el nombre correcto en la respuesta.
         } else {
           setSaved(false); // Evitar mostrar "Guardado" por defecto.
         }
@@ -362,7 +369,7 @@ const PostDetail = () => {
               )}
 
               {/* Sección de talles y cantidad */}
-              <div className={styles.sizeAndQuantity}>
+              <div className="talleEstilo">
                 <label htmlFor="size">Talle:</label>
                 <select
                   id="size"
@@ -376,8 +383,8 @@ const PostDetail = () => {
                   <option value="M">M</option>
                   <option value="L">L</option>
                   <option value="XL">XL</option>
-                </select>
-
+                </select></div>
+<div className="cantidadEstilo">
                 <label htmlFor="quantity">Cantidad:</label>
                 <input
                   type="number"
@@ -392,8 +399,7 @@ const PostDetail = () => {
                   min="1"
                   className={styles.quantityInput}
                 />
-
-              </div>
+</div>
 
               <Button onClick={agregarCarritoHandler}>
                 Añadir a la Bolsa
@@ -401,6 +407,19 @@ const PostDetail = () => {
               {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>} {/* Mostrar mensaje de error */}
             </div>
           </div>
+          <ToastContainer
+  position="top-center" // Move the notification to the top
+  autoClose={3000} // Duration of the notification
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+/>
+
+
           <p className={styles.description}>{post.description}</p>
           <Link to={"/user/" + post.creatoruser.id}>
             <div className={styles.creator}>

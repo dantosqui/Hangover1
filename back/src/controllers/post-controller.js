@@ -243,6 +243,17 @@ router.delete("/:id/save", AuthMiddleware, async(req, res) => {
     }
 });
 
+router.get("/:id/save", AuthMiddleware, async(req, res) => {
+    const saved = new Saved(
+        null,
+        req.user.id,
+        req.params.id
+    );
+
+    const guardado = await postService.GetSaved(saved);
+    return res.status(200).json(guardado);
+});
+
 //guardar post
 
 export default router

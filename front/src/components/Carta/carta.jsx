@@ -1,13 +1,38 @@
 import "./carta.css";
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../AuthContext.js";
 import { guardarHandler, eliminarGuardadoHandler } from "../../universalhandlers.js";
 import standardUser from "../../vendor/imgs/standardUser.png"; // Import the default image
+import axios from "axios";
+import config from '../../config.js';
 
-function Carta({ profile_photo, username, user_id, cloth, post_id, onClickFunction , putLike}) {
+function Carta({ profile_photo, username, user_id, cloth, post_id, onClickFunction , putLike, removeWhenUnsaved}) {
   const { isLoggedIn, openModalNavBar } = useContext(AuthContext);
   const [saved, setSaved] = useState(false);
+
+  const verificarGuardado = async () => {
+    if(isLoggedIn){
+      try {
+        const token = localStorage.getItem('token');
+  
+        // Hacer solicitud al backend para verificar si el diseño está guardado
+        const response = await axios.get(`${config.url}post/${post_id}/save`, {
+          headers: { Authorization: `Bearer ${token}` }// Cambia "postId" por lo que necesites.
+        });
+        
+        setSaved(response.data); // Asumiendo que el backend devuelve { isSaved: true/false }
+        console.log(saved)
+      } catch (error) {
+        console.error('Error verificando si está guardado:', error);
+      }
+    }
+    
+  };
+
+  useEffect(() => {
+    verificarGuardado(); // Llama a la función al montar el componente.
+  }, []);
 
   return (
     <div className='card'>
@@ -23,6 +48,7 @@ function Carta({ profile_photo, username, user_id, cloth, post_id, onClickFuncti
               e.preventDefault();
               e.stopPropagation();
               eliminarGuardadoHandler(post_id, setSaved);
+              removeWhenUnsaved !== undefined ? removeWhenUnsaved : null
             }}
           >
             Guardado

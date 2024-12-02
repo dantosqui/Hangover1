@@ -118,7 +118,6 @@ const Explorar = () => {
         ))}
       </div>
       {loading && posts.length > 0 && <div>Cargando más...</div>}
-      {!hasMore && <div>No hay más posts</div>}
     </div>
   );
 };

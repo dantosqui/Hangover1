@@ -1,4 +1,3 @@
-// LibraryPage.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Biblioteca.css'; 
@@ -15,8 +14,12 @@ import Button from '../../components/Button/Button.jsx';
 
 const LibraryPage = () => {
   const [items, setItems] = useState({ saved: [], liked: [], borradores: [] });
-  const [activeTab, setActiveTab] = useState('liked');
-  const [activeFilter, setActiveFilter] = useState('liked'); 
+  const [activeTab, setActiveTab] = useState(
+    localStorage.getItem('libraryActiveTab') || 'liked'
+  );
+  const [activeFilter, setActiveFilter] = useState(
+    localStorage.getItem('libraryActiveFilter') || 'liked'
+  );
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [publishedDesigns, setPublishedDesigns] = useState(new Set());
@@ -24,6 +27,16 @@ const LibraryPage = () => {
   const { strictCheckAuth, fetchUserInfo } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState(null);
   const [totalDesigns,setTotalDesigns] = useState([]);
+  
+  // New state for confirmation modal
+  const [showSavedConfirmModal, setShowSavedConfirmModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
+
+  // Save active tab and filter to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('libraryActiveTab', activeTab);
+    localStorage.setItem('libraryActiveFilter', activeFilter);
+  }, [activeTab, activeFilter]);
 
   useEffect(() => {
     const initializeData = async () => {
@@ -50,21 +63,16 @@ const LibraryPage = () => {
         const postsResponse = await axios.get(`${config.url}post`, {
           params: { limit: 100, page: 1 },
           headers: { Authorization: `Bearer ${token}` }
-        } );
+        });
 
         // Crear Set de IDs de diseños publicados
         let publishedIds = new Set();
         if (postsResponse.data && Array.isArray(postsResponse.data.collection)) {
-          
-          
           setTotalDesigns(postsResponse.data.collection)
           // Extraer los IDs directamente de la collection
           publishedIds = new Set(
             postsResponse.data.collection.map((post, index) => index + 1)
           );
-        
-          
-         
         }
         setPublishedDesigns(publishedIds);
 
@@ -99,7 +107,6 @@ const LibraryPage = () => {
   const processBlobs = async (items) => {
     try {
       return Promise.all(items.map(async (item) => {
-        
         let blobResponse = await fetch(item.front_image);
         let blob = await blobResponse.blob();
         const url1 = URL.createObjectURL(blob);
@@ -133,6 +140,17 @@ const LibraryPage = () => {
     navigate(`/post/${postId}`);
   };
 
+
+
+
+
+  const handleUnsaved = (postId) => {
+    setItems(prevItems => ({
+      ...prevItems,
+      saved: prevItems.saved.filter(item => item.postid !== postId)
+    }));
+  }
+
   if (isLoading) {
     return <div className="loading-container">Cargando...</div>;
   }
@@ -145,6 +163,33 @@ const LibraryPage = () => {
 
   return (
     <div className="fondo">
+      {/* Confirmation Modal */}
+      {showSavedConfirmModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>¿Estás seguro?</h3>
+            <p>¿Quieres eliminar este diseño de tus guardados?</p>
+            <div className="modal-buttons">
+              <Button 
+                onClick={() => handleRemoveSavedItem(itemToRemove)}
+                className="confirm-button"
+              >
+                Sí, eliminar
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowSavedConfirmModal(false);
+                  setItemToRemove(null);
+                }}
+                className="cancel-button"
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="library-container">
         <div className='contaiAyCasiEhTePensasteQueLoIbaADecirFzJajajajajaNadaMeDetendra'>
           <div className="filtros">
@@ -186,21 +231,20 @@ const LibraryPage = () => {
                 )}
               </div>
             ) : activeFilter !== 'borradores' ? (
-              displayedItems.map((item, index) => ( //displayedItems trae el item mal??????
-                <div 
-                  key={`${activeTab}-${item.postid}-${index}`} 
-                  className="library-item" 
-                  onClick={() => handleViewDesign(item.postid)}
-                >
-                  
-                  <Carta 
-                    post_id={item.postid} 
-                    cloth={item.front_image} 
+              displayedItems.map((item, index) => (
+                <div key={`${activeTab}-${item.postid}-${index}`} className="library-item">
+                  <Carta
+                    post_id={item.postid}
+                    cloth={item.front_image}
                     profile_photo={item.profile_photo}
-                    username={item.username}    
+                    username={item.username}
                     user_id={item.creator_id}
                     onClickFunction={() => handleViewDesign(item.postid)}
-                    putLike={false}
+                    putLike={true}
+                    isSaved={activeFilter === 'saved'}
+                    // Aquí usamos la función handleUnsaved para actualizar el estado visualmente
+                    onRemoveSaved={activeFilter === 'saved' ? () => handleUnsaved(item.postid) : undefined}
+                    removeWhenUnsaved={handleUnsaved}
                   />
                 </div>
               ))
@@ -208,7 +252,6 @@ const LibraryPage = () => {
               displayedItems.map((item, index) => (
                 <div className="designItemWrapper" key={`${item.front_image}-${index}`}>
                   <Link to="/designer" state={{ designId: item.id }}>
-                    
                     <CartaSimple 
                       cloth={item.front_image} 
                       profile_photo={userInfo[0]?.profile_photo || '/ruta/a/tu/imagen/default.png'}
@@ -216,7 +259,6 @@ const LibraryPage = () => {
                       design_id={item.id}
                     />
                   </Link>
-                 
                 </div>
               ))
             )}

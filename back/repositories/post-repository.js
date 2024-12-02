@@ -216,7 +216,7 @@ export class PostRepository {
         try {
             const query = `
                 INSERT INTO posts (creator_id, title, description, allow_comments, visibility_id, parent_id, likes, remixable, date_posted, front_image, back_image,price)
-                VALUES ($1, $2, $3, $4, (select id from visibilities where visibility = $5), $6, 0, $7,CURRENT_DATE, (select image from designs where id=$8), '',35)
+                VALUES ($1, $2, $3, $4, (select id from visibilities where visibility = $5), $6, 0, $7,CURRENT_DATE, (select front_image from designs where id=$8), (select back_image from designs where id=$8),35)
                 RETURNING id;
             `;
             const values = [
@@ -229,7 +229,6 @@ export class PostRepository {
                 post.remixable,
                 post.design_id
             ];
-            
             
             const result = await this.DBClient.query(query, values);
             
@@ -365,7 +364,7 @@ return likes.rowCount>0;
       async isSavedByUser(idUser, idPost) {
         try {
           const query = `
-            SELECT COUNT(*) AS count
+            SELECT id
             FROM saved
             WHERE user_id = $1 AND post_id = $2
           `;

@@ -43,7 +43,7 @@ const Navbar = () => {
       fetchUser();
     }
   }, [isLoggedIn]);
-
+  
   openModal = () => {
     setModalVisible(true);
   };
@@ -129,7 +129,7 @@ const Navbar = () => {
          </div>
           
             </li>
-            <li><Link to="/carrito">Carrito</Link></li>
+             <li><Link to="/bolsa">Carrito</Link></li> 
             <li className='textoNuevoDiseño'><Link className='nuevoDiseño' to="/designer">Nuevo Diseño</Link></li>
             <li> 
               {isLoggedIn ? (
@@ -139,7 +139,7 @@ const Navbar = () => {
               )}
             </li>
           </ul>
-          </div>
+          </div> 
           <div className='userThingsDiv'>
           {isLoggedIn ? (
                 <>
@@ -149,7 +149,7 @@ const Navbar = () => {
                  
                 </>
               ) : (
-                <a className='userThingsA' onClick={openModal}><img className='profPic' src={standardUser}/></a>
+                <a className='userThingsA' onClick={openModal}><img className='profPic' src={standardUser} alt="user"/></a>
               )}
         </div>
         </nav>

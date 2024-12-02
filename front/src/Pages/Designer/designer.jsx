@@ -102,12 +102,17 @@ const backRef = useRef(null);  // Para la vista trasera
   const nav = useNavigate();
 
   const getShirt = useCallback(async () => {
+   
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get(`${config.url}design/get/${designId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
+      const response = await axios.get(
+        `${config.url}design/get/${designId}`,
+          {
+            headers:  {Authorization: `Bearer ${token}`}
+          },
+        
+      );
+      console.log("HOLAAA")
       const data = JSON.parse(response.data);
 
 
@@ -124,6 +129,7 @@ const backRef = useRef(null);  // Para la vista trasera
   }, [designId]);
 
   useEffect(() => {
+
     if (designId) {
       getShirt();
     }
@@ -519,25 +525,54 @@ const backRef = useRef(null);  // Para la vista trasera
     setSelectedItem(null);
     setSelectedItemType(null);
   };
+ 
+ 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleCapture = async () => { 
     if (shirtRef.current && isLoggedIn) {
-      clearSelection()
-      const canvas = await html2canvas(shirtRef.current);
-      setCurrentView('front')
-      
-      const dataUrl1 = canvas.toDataURL('image/jpeg', 0.8);
-      setCurrentView('back')
-      const dataUrl2 = canvas.toDataURL('image/jpeg', 0.8);
-      saveImage(dataUrl1,dataUrl2);
-      modalPublish();
-      console.log(dataUrl1)
-      console.log(dataUrl2)
-      setHasChanges(false);
-    }else{
+      try {
+        setIsLoading(true);
+        clearSelection()
+        const currentViewThatWas = currentView
+  
+        // Capturar vista frontal
+        setCurrentView('front')
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const canvas1 = await html2canvas(shirtRef.current, {
+          ignoreElements: (element) => {
+            // This will exclude the loading modal from the screenshot
+            return element.classList.contains('modal-overlay');
+          }
+        });
+        const dataUrl1 = canvas1.toDataURL('image/jpeg', 0.8);
+        
+        // Capturar vista trasera
+        setCurrentView('back')
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const canvas2 = await html2canvas(shirtRef.current, {
+          ignoreElements: (element) => {
+            // This will exclude the loading modal from the screenshot
+            return element.classList.contains('modal-overlay');
+          }
+        });
+        const dataUrl2 = canvas2.toDataURL('image/jpeg', 0.8);
+        
+        setCurrentView(currentViewThatWas)
+        saveImage(dataUrl1, dataUrl2);
+        modalPublish();
+        setHasChanges(false);
+      } catch (error) {
+        console.error('Error capturing design', error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
       openModalNavBar()
     }
   };
-
+  // Add this to your return statement, after the existing modals
+  
   const modalPublish = () => {
     setModalVisible(true);
   }
@@ -553,8 +588,8 @@ const backRef = useRef(null);  // Para la vista trasera
 
   const saveImage = (dataUrl1, dataUrl2) => {
     const link = document.createElement('a');
-    link.href = dataUrl1;
-  
+  //  link.href = dataUrl1;
+  //console.log("LLEGO HASTA ACA VIVO",link) //ey a vos te aparece el user en la navbar o vacio? desaparecio, quiza error mio pero yo cambie back solo ok a ver
     link.addEventListener('click', (e) => {
       e.preventDefault();
       saveShirt(dataUrl1,dataUrl2);
@@ -575,7 +610,6 @@ const backRef = useRef(null);  // Para la vista trasera
     };
 
     const designJSON = JSON.stringify(designData);
-      console.log("EL LOG QUE BVUSCAS;", designId)
     const token = localStorage.getItem('token');
     try {
       const response = await axios.post(`${config.url}design/save`, { designId: designId, front_image: dataUrl1,back_image: dataUrl2, designData: designJSON }, {
@@ -584,6 +618,7 @@ const backRef = useRef(null);  // Para la vista trasera
       console.log(response.data)
       setSavedShirtId(response.data)
     } catch (error) {
+  //   console.log("EL ERROR ESTA AQUIIIIII")
       console.error('Error saving shirt:', error);
     }
   };
@@ -643,6 +678,15 @@ const backRef = useRef(null);  // Para la vista trasera
 
  
   return (
+    <>
+    {isLoading && (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Guardando diseño...</h2>
+          <p>Por favor, espera un momento</p>
+        </div>
+      </div>
+    )}
     <div className="designer" onClick={handleClick}>
       <h2>Crea un Diseño</h2>
       
@@ -860,6 +904,7 @@ const backRef = useRef(null);  // Para la vista trasera
         />
       )}
     </svg>
+    
           <img
             src={shirt}
             alt={`Shirt ${currentView} view`}
@@ -1000,7 +1045,7 @@ const backRef = useRef(null);  // Para la vista trasera
         </button>
       </div>
     ) : (
-      <h3>Diseño guardado.</h3> // Mensaje cuando no hay cambios
+      <h3 className='guardadoCoso'>Diseño guardado.</h3> // Mensaje cuando no hay cambios
     )}
      {contextMenuVisible && (
         <ContextMenu
@@ -1025,7 +1070,7 @@ const backRef = useRef(null);  // Para la vista trasera
       )}
     </div>
         </div>
-    
+        </>
   );
 };
 
