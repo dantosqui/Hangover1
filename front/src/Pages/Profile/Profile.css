@@ -4,13 +4,14 @@
     background-size: cover;
     color: white;
   }
-  
+  .pageTitle{
+    color: white;
+  }
   .profile-picture-and-name {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     padding: 20px;
-    margin-bottom: 20px;
     background-color: rgba(56, 117, 109, 0.8); /* Mantener estilo de fondo */
     border-radius: 10px;
     flex-shrink: 0; /* Evitar que este div se reduzca */

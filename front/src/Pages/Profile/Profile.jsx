@@ -73,6 +73,8 @@ const Profile = () => {
           description: response.data.user_data.description,
           profile_photo: response.data.user_data.profile_photo 
         });
+
+        document.title=response.data.user_data.username + " - Hangover"
       } catch (error) {
         console.error("Error fetching user data", error);
       }
@@ -196,6 +198,7 @@ console.log("foto de perfil: " + userData.user_data.profile_photo)
         <div className="profile-description profile-backgorund">
           {editing ? (
             <>
+              <h2 className="pageTitle">Editar informacion</h2>
               <input
                 type="text"
                 name="first_name"
@@ -234,8 +237,9 @@ console.log("foto de perfil: " + userData.user_data.profile_photo)
                     position: 'relative'
                   }}
                 >
+                  {console.log("formdata",formData)}
                   <img
-                    src={previewImage || formData.profile_photo || userData.user_data.profile_photo}
+                    src={previewImage || formData.profile_photo || userData.user_data.profile_photo || standardUser}
                     alt="Imagen de perfil"
                     className="profile-img"
                     style={{
@@ -289,9 +293,11 @@ console.log("foto de perfil: " + userData.user_data.profile_photo)
           <div className="profile-actions">
             {isOwnProfile ? (
               <>
-                <Button text="Editar Perfil" onClick={() => setEditing(true)} />
+                {!editing && (
+                <><Button text="Editar Perfil" onClick={() => setEditing(true)} />
                 <Button text="Cerrar sesión" onClick={() => LogOut()}/>
-              </>
+                </>
+                )}</>
             ) : (
               <>
                 {follows ? (

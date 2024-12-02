@@ -71,7 +71,8 @@ const LibraryPage = () => {
           setTotalDesigns(postsResponse.data.collection)
           // Extraer los IDs directamente de la collection
           publishedIds = new Set(
-            postsResponse.data.collection.map((post, index) => index + 1)
+            //postsResponse.data.collection.map((post, index) => index + 1)
+            postsResponse.data.collection.map(post => post.id)
           );
         }
         setPublishedDesigns(publishedIds);
@@ -170,7 +171,7 @@ const LibraryPage = () => {
             <h3>¿Estás seguro?</h3>
             <p>¿Quieres eliminar este diseño de tus guardados?</p>
             <div className="modal-buttons">
-              <Button 
+              {/* <Button 
                 onClick={() => handleRemoveSavedItem(itemToRemove)}
                 className="confirm-button"
               >
@@ -184,7 +185,7 @@ const LibraryPage = () => {
                 className="cancel-button"
               >
                 Cancelar
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

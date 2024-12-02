@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from "../../config.js";
 import './Carrito.css'; 
+import {useNavigate} from 'react-router'
 
 const Carrito = () => {
     const [carritoStuff, setCarritoStuff] = useState([]);
     const [error, setError] = useState(null);
     const [totalAmount, setTotalAmount] = useState(0);
+    const navigator = useNavigate()
 
     useEffect(() => {
         const loadCarrito = async () => {
@@ -38,8 +40,16 @@ const Carrito = () => {
     }, [carritoStuff]);
 
     const handleCheckout = async (totalAmount) => {
-        alert("Estamos trabajando en el sistema de pago. Gracias por tu paciencia.");
+        handleClearCarrito()
+        navigator.navigate("/exito")
     };
+
+    const handleClearCarrito = async () => {
+        const token = localStorage.getItem("token")
+        axios.delete(`${config.url}user/carrito`,{
+            headers: {Authorization:`Bearer ${token}`}
+        })
+    }
 
 
     return (
@@ -66,9 +76,6 @@ const Carrito = () => {
                                     </div>
                                     <div className="cart-item-quantity">
                                         <span>Cantidad:</span> {item.quantity}
-                                    </div>
-                                    <div className="cart-item-price">
-                                        <span>Precio unitario:</span> ${item.price}
                                     </div>
                                     <div className="cart-item-total">
                                         <span>Precio total:</span> ${item.price * item.quantity}

@@ -66,7 +66,7 @@ const NewPost = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="content">Descripcoin:</label>
+                    <label htmlFor="content">Descripcion:</label>
                     <textarea
                         className="new-post-textarea"
                         id="content"

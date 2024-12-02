@@ -30,7 +30,7 @@
 .empty-cart h2 {
     font-size: 28px;
     font-weight: bold;
-    color: #ff5c5c;
+    color: rgba(56, 117, 109, 0.95);
     margin-bottom: 10px;
 }
 
@@ -93,6 +93,10 @@
     margin-bottom: 10px;
 }
 
+.cart-item-total{
+    font-weight: bolder;
+}
+
 .cart-item-details {
     width: 100%;
     display: flex;
@@ -125,7 +129,7 @@
 }
 
 .checkout-button {
-    background-color: #ff5c5c;
+    background-color: rgba(56, 117, 109, 0.95);
     color: white;
     padding: 14px 24px;
     border: none;
@@ -137,7 +141,7 @@
 }
 
 .checkout-button:hover {
-    background-color: #e14b4b;
+    background-color: rgba(45, 95, 88, 0.95);
 }
 
 @media (max-width: 768px) {

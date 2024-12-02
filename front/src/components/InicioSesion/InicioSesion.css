@@ -12,6 +12,11 @@
   z-index: 100000;
 }
 
+.passwordError{
+  color:red;
+  margin: 1px 0px 6px 0px;
+}
+
 /* Container for the popup content */
 .inicio-sesion-popup-content {
   background: #ffffff;

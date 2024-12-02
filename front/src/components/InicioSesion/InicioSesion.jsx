@@ -154,7 +154,7 @@ const InicioSesion = ({ closeModal }) => {
                     required
                   />
                   {password && password.length < 8 && (
-                    <p className="error">La contraseña debe tener al menos 8 caracteres.</p>
+                    <p className="error passwordError">La contraseña debe tener al menos 8 caracteres.</p>
                   )}
                 </div>
                 <div className="form-group">

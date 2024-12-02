@@ -16,6 +16,7 @@ import Chat from "./Pages/Chat/Chat.jsx";
 import NewPost from "./Pages/NewPost/NewPost.jsx"; 
 import Carrito from "./Pages/Carrito/Carrito.jsx"; 
 import ChatsView from "./Pages/ChatsView/ChatsView.jsx";
+import OperacionExitosa from "./Pages/OperacionExitosa/OperacionExitosa.jsx"
 
 import { AuthProvider } from "./AuthContext";
 
@@ -24,18 +25,19 @@ const ChangeTitle = () => {
   const location = useLocation();
 
   useEffect(() => {
+    document.title="  "
     // Cambiar el título basado en la ruta
     if (location.pathname === "/") {
       document.title = "Explorar";
     } else if (location.pathname === "/login") {
       document.title = "Inicio de Sesión";
-    } else if (location.pathname.startsWith("/post")) {
-      const postId = location.pathname.split("/")[2];
-      document.title = `Post ${postId}`;
-    } else if (location.pathname.startsWith("/user")) {
+    } //else if (location.pathname.startsWith("/post")) {
+      //const postId = location.pathname.split("/")[2];
+      //document.title = `Post ${postId}`;
+      /* else if (location.pathname.startsWith("/user")) {
       const userId = location.pathname.split("/")[2];
-      document.title = `Perfil de Usuario ${userId}`;
-    } else if (location.pathname === "/designer") {
+      document.title = `Perfil de Usuario ${userId}`; */
+     else if (location.pathname === "/designer") {
       document.title = "Diseñador";
     } else if (location.pathname === "/bolsa") {
       document.title = "Carrito";
@@ -50,11 +52,10 @@ const ChangeTitle = () => {
       document.title = "New Post";
     } else if (location.pathname === "/chatsview") {
       document.title = "Chats";
-    } else if (location.pathname === "/informacion") {
+    } else if (location.pathname.includes("/informacion")) {
       document.title = "Información";
-    } else {
-      document.title = "Hangover";
     }
+    document.title=document.title + " - Hangover"
   }, [location]);
 
   return null;
@@ -86,6 +87,7 @@ function App() {
           {/* <Route exact path="/carrito" element={<Carrito />} /> */}
           <Route exact path="/chatsview" element={<ChatsView />} />
           <Route exact path="/newPost/:designId" element={<NewPost />} />
+          <Route exact path="/exito" element={<OperacionExitosa />} />
         </Routes>
       </Router>
     </AuthProvider>
