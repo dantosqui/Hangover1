@@ -104,6 +104,7 @@ const Explorar = () => {
             key={post.id}
             to={`/post/${post.id}`}
             ref={index === posts.length - 1 ? lastPostElementRef : null}
+            className="linkCartas"
           >
             <Carta
               putLike={true}

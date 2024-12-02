@@ -191,4 +191,15 @@ router.delete("/carrito/:id",AuthMiddleware,async(req,res) => {
     }
 })
 
+router.get("/designs",AuthMiddleware,async(req,res) => {
+    const user = req.user
+    if (user!==null){
+        const posts = await userService.getPostsByUser(req.params.id)
+        return res.status(200).json(posts.rows)
+    }
+    else{
+        return res.status(401).send()
+    }
+})
+
 export default router;

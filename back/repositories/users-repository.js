@@ -326,4 +326,15 @@ export class UserRepository {
             console.error("error borrando del carrito: ",e)
         }
     }
+
+    async getPostsByUser(id){
+        const query = `
+          SELECT 
+            designs.* 
+          FROM designs
+          WHERE designs.id_creator_user = $1
+        `;
+
+        return await this.DBClient.query(query,[id])
+    }
 }

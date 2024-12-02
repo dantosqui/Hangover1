@@ -12,7 +12,9 @@
     
     overflow-y: auto;
 }
-
+.chatsRecientes, .noChatsMessage{
+    text-align: center;
+}
 .chat-container {
     flex: 1;
     display: flex;

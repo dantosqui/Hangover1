@@ -53,7 +53,7 @@ const NewPost = () => {
 
     return (
         <div className="new-post-container">
-            <h2>Subir un diseño</h2>
+            <h2 className="holaChicosChicos">Subir un diseño</h2>
             <form className="new-post-form" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="title">Titulo:</label>

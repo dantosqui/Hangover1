@@ -201,6 +201,7 @@ export class PostRepository {
                     WHERE s.user_id = $1 
                     AND s.post_id = p.id
                 )
+            ORDER BY p.id DESC
             LIMIT $2 OFFSET $3;
         `;
     
@@ -378,12 +379,15 @@ return likes.rowCount>0;
         }
       }
       
-      async puedeComentar(postId){
+            async puedeComentar(postId){
         const query = "SELECT allow_comments FROM posts WHERE id = $1"
         const result = await this.DBClient.query(query, [postId]);
         
         return result.rows[0].allow_comments;
       }
+
+
+      
 
 
 

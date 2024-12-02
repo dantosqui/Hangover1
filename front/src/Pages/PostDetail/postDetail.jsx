@@ -352,7 +352,7 @@ const PostDetail = () => {
           </div>
           <div className={styles.infoSection}>
             <div className={styles.titleAndButtons}>
-              <h2 className={styles.title}>{post.title}</h2>
+              <h2 className={styles.title} title={post.title}>{post.title}</h2>
               <div className={styles.contenedorDeDescripcion}>
               <p className={styles.description}>{post.description}</p></div>
               <div className={styles.optionsContainer}>

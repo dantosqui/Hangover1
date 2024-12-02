@@ -21,16 +21,26 @@
     object-fit: cover; /* Asegura que la imagen cubra el área del contenedor */
   }
 
-  .user{
+  .user {
+    display: inline-block;
     font-size: 14px;
     font-weight: 600;
+    width: 4.5rem; /* Restrict the width */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+    overflow: hidden; /* Ensure overflow is hidden */
+    white-space: nowrap; /* Prevent wrapping */
+    text-align: left; /* Align text to the leftmost side */
+    padding: 0; /* Remove any padding */
+    margin: 0; /* Remove any margin */
   }
   
+  
   .content {
-    padding: 20px;
+    padding: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     flex-wrap: wrap;
     min-width: 1%;
   }
@@ -93,7 +103,10 @@
     box-sizing: border-box;
     margin-bottom: 20px; /* Espacio entre las filas */
     display: flex
+    
+    
 ;
+
     flex-direction: column;
     align-items: center;
     width: 240px;

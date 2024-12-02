@@ -7,7 +7,7 @@ import {useEffect} from 'react'
 const OperacionExitosa = () => {
     const nav = useNavigate()
 
-    const OperacionExitosa = () => {
+    
         useEffect(() => {
             const timer = setTimeout(() => {
                 nav('/')
@@ -15,7 +15,7 @@ const OperacionExitosa = () => {
     
             return () => clearTimeout(timer);
         }, []);
-    }
+    
 
     return (
         <div className="operacion-exitosa">

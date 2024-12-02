@@ -45,20 +45,22 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    
     const fetchUserData = async () => {
       try {
         const token2 = localStorage.getItem("token");
-        if (isLoggedIn) {
+        
           const checkisloggedinuser = await axios.get(`${config.url}user/`, {
             headers: { Authorization: `Bearer ${token2}` },
           });
-          
+          console.log("HOLAAAA",userId)
+          console.log("HOLAAAA2",checkisloggedinuser.data[0].id)
           setIsOwnProfile(checkisloggedinuser.data[0].id == userId);
 
           if (checkisloggedinuser.data[0].id !== null) {
             setOwnUserId(checkisloggedinuser.data[0].id);
           }
-        }
+        
 
         const response = await axios.get(`${config.url}user/profile/${userId}`, {
           headers: { Authorization: `Bearer ${token2}` },
@@ -81,7 +83,7 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, [userId]);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -126,7 +128,7 @@ const Profile = () => {
         updatedProfilePhoto = `http://localhost:3508/images/${response.data.filename}`;
         
         setUploadingImage(false);
-        window.
+        window.location.reload()
       }
   
       const dataToSend = {
@@ -342,6 +344,7 @@ console.log("foto de perfil: " + userData.user_data.profile_photo)
               <Link
                 to={`/post/${item.id}`}
                 key={item.id}
+                className="linkCartas"
               >
                 <Carta
                   post_id={item.id}

@@ -312,7 +312,6 @@ const Chat = ({ ownId, chatId }) => {
       <ChatHeader>
         {chatName !== null ? chatName : chatMembers[1]}
       </ChatHeader>
-
       <Messages id="messages" ref={messagesContainerRef}>
         {Object.entries(groupedMessages).map(([date, msgs], groupIndex) => (
           <React.Fragment key={date}>
@@ -323,6 +322,7 @@ const Chat = ({ ownId, chatId }) => {
                 $isOwnMessage={msg.sender_user === +ownId}
                 ref={groupIndex === 0 && index === 0 ? lastMessageRef : null}
               >
+                 { console.log("mensaj. ", msg)}
                 <SenderName>{msg.sender_user !== +ownId ? msg.username : 'Tú'}</SenderName>
                 <MessageContent>{msg.content}</MessageContent>
                 <MessageTime>{formatTime(msg.date_sent)}</MessageTime>

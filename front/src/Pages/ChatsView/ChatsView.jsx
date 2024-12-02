@@ -5,6 +5,8 @@ import { useLocation } from 'react-router-dom';
 import config from '../../config';
 import Button from '../../components/Button/Button';
 import Chat from '../Chat/Chat';
+import { useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 
 const ChatView = () => {
     const [chats, setChats] = useState([]);
@@ -16,9 +18,13 @@ const ChatView = () => {
     const [friendsLoading, setFriendsLoading] = useState(false);
     const [friendsError, setFriendsError] = useState(null);
     const [selectedChatId, setSelectedChatId] = useState(null);
+    const {fetchUserInfo} = useContext(AuthContext)
+    const [user,setUser] = useState({})
 
     const groupNameRef = useRef();
     const location = useLocation();
+
+   
 
     const fetchRecentChats = async () => {
         try {
@@ -29,6 +35,7 @@ const ChatView = () => {
             setChats(response.data.chats);
             setLoading(false);
             setOwnId(response.data.ownId);
+            console.log("chats nombres DEL FETCH: ", response.data.chats)
         } catch (err) {
             console.error('Error fetching recent chats:', err);
             setError('Error al obtener los chats recientes');
@@ -37,6 +44,11 @@ const ChatView = () => {
     };
 
     useEffect(() => {
+        const fetchuser = async () => {
+        const user = await fetchUserInfo()
+        setUser(user)
+        }
+        fetchuser()
         fetchRecentChats();
         setSelectedChatId(location.search.split('=')[1]);
     }, []);
@@ -108,29 +120,35 @@ const ChatView = () => {
     if (error) {
         return <div>{error}</div>;
     }
-
+    console.log("chat")
     return (
         <div className="chat-view-container">
             <div className="chats-list-contain">
-                <h2>Chats recientes</h2>
+                <h2 className='chatsRecientes'>Chats recientes</h2>
                 <ul className="chatList">
-                    {chats.map((chat) => (
-                        <li
-                            key={chat.id}
-                            onClick={() => setSelectedChatId(chat.id)}
-                            className={selectedChatId === chat.id ? 'selected' : ''}
-                        >
-                            <div className="chatCard">
-                                {chat.name !== null ? (
-                                    <strong>{chat.name}</strong>
-                                ) : (
-                                    <strong>{chat.username}</strong>
-                                )}
-                                <span>Último mensaje: {new Date(chat.last_message_time).toLocaleString()}</span>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+    {chats.length === 0 ? (
+        <li className="noChatsMessage">Todavía no tiene chats recientes</li>
+    ) : (
+        chats.map((chat) => (
+            <li
+                key={chat.id}
+                onClick={() => setSelectedChatId(chat.id)}
+                className={selectedChatId === chat.id ? 'selected' : ''}
+            >
+                <div className="chatCard">
+                    {chat.name !== null ? (
+                        <strong>{chat.name}</strong>
+                    ) : (
+                        <strong>
+                            {chat.chat_members.filter((i) => i !== user[0].username)[0]}
+                        </strong>
+                    )}
+                    <span>Último mensaje: {new Date(chat.last_message_time).toLocaleString()}</span>
+                </div>
+            </li>
+        ))
+    )}
+</ul>
                 <div className="newChatButtonWrapper">
                     <Button className="newChat" onClick={openModal}>
                         +

@@ -22,7 +22,7 @@ const LibraryPage = () => {
   );
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [publishedDesigns, setPublishedDesigns] = useState(new Set());
+  const [publishedDesigns, setPublishedDesigns] = useState([]);
   const navigate = useNavigate();
   const { strictCheckAuth, fetchUserInfo } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState(null);
@@ -65,6 +65,7 @@ const LibraryPage = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
+        console.log("postresponse",postsResponse)
         // Crear Set de IDs de diseños publicados
         let publishedIds = new Set();
         if (postsResponse.data && Array.isArray(postsResponse.data.collection)) {
@@ -232,8 +233,14 @@ const LibraryPage = () => {
               </div>
             ) : activeFilter !== 'borradores' ? (
               displayedItems.map((item, index) => (
-                <div key={`${activeTab}-${item.postid}-${index}`} className="library-item">
+                <Link
+                key={item.postid}
+                to={`/post/${item.postid}`}
+               // ref={index === posts.length - 1 ? lastPostElementRef : null}
+                className="linkCartas"
+              >
                   <Carta
+                  
                     post_id={item.postid}
                     cloth={item.front_image}
                     profile_photo={item.profile_photo}
@@ -246,12 +253,13 @@ const LibraryPage = () => {
                     onRemoveSaved={activeFilter === 'saved' ? () => handleUnsaved(item.postid) : undefined}
                     removeWhenUnsaved={handleUnsaved}
                   />
-                </div>
+                </Link>
               ))
             ) : (
               displayedItems.map((item, index) => (
                 <div className="designItemWrapper" key={`${item.front_image}-${index}`}>
                   <Link to="/designer" state={{ designId: item.id }}>
+                    {console.log("comillas para saber lo que es: " + publishedDesigns.has)}
                     <CartaSimple 
                       cloth={item.front_image} 
                       profile_photo={userInfo[0]?.profile_photo || '/ruta/a/tu/imagen/default.png'}
