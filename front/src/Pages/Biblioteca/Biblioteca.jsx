@@ -71,8 +71,7 @@ const LibraryPage = () => {
           setTotalDesigns(postsResponse.data.collection)
           // Extraer los IDs directamente de la collection
           publishedIds = new Set(
-            //postsResponse.data.collection.map((post, index) => index + 1)
-            postsResponse.data.collection.map(post => post.id)
+            postsResponse.data.collection.map((post, index) => index + 1)
           );
         }
         setPublishedDesigns(publishedIds);
@@ -256,7 +255,9 @@ const LibraryPage = () => {
                     <CartaSimple 
                       cloth={item.front_image} 
                       profile_photo={userInfo[0]?.profile_photo || '/ruta/a/tu/imagen/default.png'}
-                      isPublished={publishedDesigns.has(item.id)}
+                      isPublished={publishedDesigns.has(item.id)} 
+                      //[...publishedDesigns].some(design => design.id === item.id) con este pasa todos directamente como false
+
                       design_id={item.id}
                     />
                   </Link>

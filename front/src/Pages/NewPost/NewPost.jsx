@@ -126,6 +126,7 @@ const NewPost = () => {
                 </div>
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <Button type="submit">Publicar</Button>
+                
             </form>
         </div>
     );

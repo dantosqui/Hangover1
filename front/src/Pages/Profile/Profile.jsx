@@ -126,6 +126,7 @@ const Profile = () => {
         updatedProfilePhoto = `http://localhost:3508/images/${response.data.filename}`;
         
         setUploadingImage(false);
+        window.
       }
   
       const dataToSend = {

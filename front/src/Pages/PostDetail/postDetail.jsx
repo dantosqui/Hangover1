@@ -59,7 +59,7 @@ const PostDetail = () => {
   // Función para agregar al carrito
   const agregarCarritoHandler = async () => {
     if (!size) {
-      setErrorMessage("Debes seleccionar un talle antes de añadir al carrito.");
+      alert("Debes seleccionar un talle antes de añadir al carrito.");
       return; // Detener la ejecución si no hay talle seleccionado
     }
 
@@ -353,6 +353,8 @@ const PostDetail = () => {
           <div className={styles.infoSection}>
             <div className={styles.titleAndButtons}>
               <h2 className={styles.title}>{post.title}</h2>
+              <div className={styles.contenedorDeDescripcion}>
+              <p className={styles.description}>{post.description}</p></div>
               <div className={styles.optionsContainer}>
                 {saved ? (
                   <Button
@@ -395,7 +397,7 @@ const PostDetail = () => {
                     <option value="XL">XL</option>
                   </select>
                 </div>
-                <div className="selectGroup">
+                <div className={styles.selectGroup}>
                   <label htmlFor="quantity">Cantidad:</label>
                   <input
                     type="number"
@@ -432,7 +434,7 @@ const PostDetail = () => {
               pauseOnHover
             />
 
-            <p className={styles.description}>{post.description}</p>
+           
             <Link to={"/user/" + post.creatoruser.id}>
               <div className={styles.creator}>
                 <img

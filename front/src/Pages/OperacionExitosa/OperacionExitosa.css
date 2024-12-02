@@ -1,0 +1,44 @@
+/* Estilos para el componente de operación exitosa */
+.operacion-exitosa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.mensaje {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.329);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.mensaje h1 {
+    font-size: 2rem;
+    color: rgba(56, 117, 109, 0.95);
+    margin-bottom: 20px;
+}
+
+.mensaje p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.mensaje button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: rgba(56, 117, 109, 0.95);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.mensaje button:hover {
+    background-color: rgba(47, 99, 92, 0.95);
+}

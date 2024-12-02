@@ -91,7 +91,7 @@ body{
   flex-direction: column;
   align-items: center;
   gap: 1rem; /* Espacio entre los elementos */
-  width: 100%; /* Asegura que todos los hijos tengan el mismo ancho */
+  width: 50%; /* Asegura que todos los hijos tengan el mismo ancho */
 }
 
 .optionsContainer > * {
@@ -111,8 +111,22 @@ body{
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
-  appearance: none; /* Uniformiza el estilo del select entre navegadores */
+  
 }
+.talleSelect{
+  height: 2rem;
+  font-size:.9rem;
+  border: solid  rgba(56, 117, 109, 1) 1px;
+  line-height: 2rem; /* Igual a la altura del select */
+  display: flex;
+  padding: 0;
+  padding-top: .065rem;
+  padding-left: .1rem;
+}
+.quantityInput{
+  width: calc(100% - .7rem);
+}
+
 
 .optionsContainer button {
   width: 100%;
@@ -131,8 +145,42 @@ body{
 }
 .description {
   color: #666;
-  margin-bottom: 20px;
+ 
+  text-wrap: wrap;
 }
+.contenedorDeDescripcion{
+  position: absolute;
+  width: 12rem;
+  height: 15rem;
+  margin-top: 2rem;
+  word-wrap: break-word; /* Ensures long words break to fit */
+  overflow-wrap: break-word; /* Modern equivalent of word-wrap */
+  white-space: normal; /* Allows text to wrap normally */
+  overflow: auto;
+}
+.contenedorDeDescripcion::-webkit-scrollbar {
+  width: 0.4rem; /* Ancho de la barra de desplazamiento */
+  background: transparent; /* Elimina el fondo blanco del track */
+}
+
+.contenedorDeDescripcion::-webkit-scrollbar-thumb {
+  background: #888; /* Color del pulgar */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.contenedorDeDescripcion::-webkit-scrollbar-track {
+  background: transparent; /* Fondo transparente del track */
+}
+
+.contenedorDeDescripcion::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color del pulgar al pasar el ratón */
+}
+
+/* Eliminar las flechitas */
+.contenedorDeDescripcion::-webkit-scrollbar-button {
+  display: none; /* Oculta los botones */
+}
+
 .creator {
   display: flex;
   align-items: center;

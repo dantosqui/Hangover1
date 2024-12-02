@@ -20,7 +20,7 @@ function CartaSimple({ className, profile_photo, username, user_id, cloth, post_
       <div className="content" onClick={onClickFunction}>
         <img className="remerita" src={cloth} alt="Ropa" />
       </div>
-      {isPublished ? (
+      {isPublished === true ? (
           <div className="Guardar">Publicado</div>
         ) : (
           <Link 

@@ -3,12 +3,15 @@ import axios from 'axios';
 import config from "../../config.js";
 import './Carrito.css'; 
 import {useNavigate} from 'react-router'
+import Button from '../../components/Button/Button.jsx'
+import trashIcon from '../../vendor/imgs/trashIcon.png'
+
 
 const Carrito = () => {
     const [carritoStuff, setCarritoStuff] = useState([]);
     const [error, setError] = useState(null);
     const [totalAmount, setTotalAmount] = useState(0);
-    const navigator = useNavigate()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const loadCarrito = async () => {
@@ -19,6 +22,7 @@ const Carrito = () => {
                 });
                 if (response.data && Array.isArray(response.data.carritoStuff)) {
                     setCarritoStuff(response.data.carritoStuff);
+                    console.log("carritostuff ",response.data.carritoStuff)
                 } else {
                     setError("API response format is incorrect");
                     console.error("Incorrect data format:", response.data);
@@ -40,28 +44,43 @@ const Carrito = () => {
     }, [carritoStuff]);
 
     const handleCheckout = async (totalAmount) => {
-        handleClearCarrito()
-        navigator.navigate("/exito")
+        await handleClearCarrito()
+        navigate("/exito")
     };
 
     const handleClearCarrito = async () => {
         const token = localStorage.getItem("token")
-        axios.delete(`${config.url}user/carrito`,{
+        await axios.delete(`${config.url}user/carrito`,{
             headers: {Authorization:`Bearer ${token}`}
         })
+    }
+
+    const handleRemoveItem = async (id)=>{
+        try{
+        const token = localStorage.getItem("token")
+        await axios.delete(`${config.url}user/carrito/${id}`,{
+            headers: {Authorization:`Bearer ${token}`}
+        })
+        setCarritoStuff(carritoStuff.filter((item) => item.cart_id !== id))
+
+        }
+        catch(e){
+            console.error("error removeando un itenm carrito: ",e)
+        }
     }
 
 
     return (
         <div className="carrito-container">
-            <script src="https://sdk.mercadopago.com/js/v2"></script>
+            {/* <script src="https://sdk.mercadopago.com/js/v2"></script> */}
             {error && <div className="error-message">{error}</div>}
             {carritoStuff.length === 0 ? (
-                <div className="empty-cart">
-                    <h2>¡El carrito está vacío! 😔</h2>
+                <div className="empty-cart" onClick={() => {navigate("/")}}>
+                    <h2>¡El carrito está vacío!</h2>
                     <p>Agrega productos para empezar a comprar.</p>
                 </div>
             ) : (
+                <>
                 <div className="cart-items">
                     {carritoStuff.map((item, index) => (
                         <div key={index} className="cart-item">
@@ -82,14 +101,16 @@ const Carrito = () => {
                                     </div>
                                 </div>
                             </div>
+                            <Button onClick={() => handleRemoveItem(item.cart_id)} className="trash-button"><img src={trashIcon} alt="Eliminar del carrito" className="trash-icon" /></Button>
                         </div>
                     ))}
                 </div>
-            )}
             <div className="total-amount">
                 <h3>Total del carrito: ${totalAmount.toFixed(2)}</h3>
                 <button className="checkout-button" onClick={() => handleCheckout(totalAmount)}>Pagar ahora</button>
             </div>
+            </>
+            )}
         </div>
     ); 
 };

@@ -62,6 +62,10 @@ export class UsersService{
 
     }
 
+    async deleteCarritoById(id){
+        return await this.bd.deleteCarritoById(id)
+    }
+
 }
 
 

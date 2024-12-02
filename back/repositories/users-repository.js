@@ -316,4 +316,14 @@ export class UserRepository {
             console.error("error borrando carrito: ",e)
         }
     }
+    async deleteCarritoById(id){
+        console.log("deletecarritobyid",id)
+        const query="DELETE FROM shopping_cart where id=$1"
+        try{
+            const result = await this.DBClient.query(query,[id])
+        }
+        catch(e){
+            console.error("error borrando del carrito: ",e)
+        }
+    }
 }
