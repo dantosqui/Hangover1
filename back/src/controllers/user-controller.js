@@ -166,4 +166,16 @@ router.get("/carrito", AuthMiddleware, async(req,res) => {
     }
 });
 
+router.delete("/carrito",AuthMiddleware,async(req,res) => {
+    const user=req.user
+    if (user!==null ){
+        const carrito = await userService.clearCarrito(user.id)
+
+        return res.status(200).json("exito")
+    }
+    else{
+        return res.status(401).send()
+    }
+})
+
 export default router;

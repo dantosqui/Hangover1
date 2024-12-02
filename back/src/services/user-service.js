@@ -50,13 +50,17 @@ export class UsersService{
     }
     async updateProfile(data, id) {
     const updateResult = await this.bd.updateProfile(data, id);
-
     if (updateResult === 1) {
         return 1;
     } else {
         return 0;
     }
-}
+    }
+    
+    async clearCarrito(id){
+        return await this.bd.clearCarrito(id)
+
+    }
 
 }
 

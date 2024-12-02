@@ -307,4 +307,13 @@ export class UserRepository {
             return 0; // Error al ejecutar la actualización
         }
     }
+    async clearCarrito(id){
+        const query="DELETE FROM shopping_cart where user_id=$1"
+        try{
+            const result = await this.DBClient.query(query,[id])
+        }
+        catch(e){
+            console.error("error borrando carrito: ",e)
+        }
+    }
 }
